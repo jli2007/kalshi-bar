@@ -51,7 +51,7 @@ export const bars: Bar[] = [
     image:
       "https://stanssportsbar.com/wp-content/uploads/2022/04/Stans-Logo-Darker-2.png",
     website: "https://stanssportsbar.com/",
-    events: ["Yankees Watch Party", "NBA Finals"],
+    events: ["Yankees Watch Party", "NBA"],
     tags: ["Classic", "Legendary"],
   },
   {
@@ -117,7 +117,7 @@ export const bars: Bar[] = [
     image:
       "https://images.squarespace-cdn.com/content/v1/61f061a8e8c8555a87925de0/0070fd65-fa1c-4f46-bff6-8cdf1553b3f4/rsr-cream+%281%29.png",
     website: "https://www.gotoroccos.com/",
-    events: ["NBA Finals", "NFL Sunday Ticket", "World Cup"],
+    events: ["NBA", "NFL Sunday Ticket", "World Cup"],
     tags: ["Trendy", "Fan favorite"],
   },
   {
@@ -172,7 +172,7 @@ export const bars: Bar[] = [
     image:
       "https://www.tonycssportsbar.com/wp-content/uploads/2024/08/DSC03355-scaled-e1765322120731.jpg",
     website: "https://www.tonycssportsbar.com/",
-    events: ["NBA Finals", "NFL Sunday Ticket", "March Madness"],
+    events: ["NBA", "NFL Sunday Ticket", "March Madness"],
     tags: ["Big screens", "Pub grub"],
   },
   {
@@ -183,7 +183,7 @@ export const bars: Bar[] = [
     image:
       "https://cdn.sanity.io/images/78e278ym/production/cae8aed6abf549b2f822a216ad2955485266f123-1980x1080.jpg",
     website: "https://www.chickiesandpetes.com/",
-    events: ["NFL Sunday Ticket", "MLB Playoffs", "NBA Finals"],
+    events: ["NFL Sunday Ticket", "MLB Playoffs", "NBA"],
     tags: ["Legendary", "Fan favorite"],
   },
   {
@@ -216,7 +216,7 @@ export const bars: Bar[] = [
     image:
       "https://tomswatchbar.com/wp-content/uploads/2025/02/Toms-Watch-Bar-logo-white-1-1.png",
     website: "https://tomswatchbar.com/navy-yard/",
-    events: ["March Madness", "NBA Finals", "NFL Sunday Ticket"],
+    events: ["March Madness", "NBA", "NFL Sunday Ticket"],
     tags: ["Big screens", "Top rated"],
   },
   {
@@ -238,7 +238,7 @@ export const bars: Bar[] = [
     image:
       "https://img1.wsimg.com/isteam/ip/2fb10d8a-1684-4050-9f69-1ffbeb786456/Over-Under-Sportsbook-Rooftop-Lounge-008_20025.jpg",
     website: "https://overunderdc.com/",
-    events: ["UFC Fight Night", "NFL Sunday Ticket", "NBA Finals"],
+    events: ["UFC Fight Night", "NFL Sunday Ticket", "NBA"],
     tags: ["Upscale", "Rooftop"],
   },
   {

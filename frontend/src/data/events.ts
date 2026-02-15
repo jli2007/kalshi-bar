@@ -27,16 +27,16 @@ export const events: Event[] = [
     date: "Feb 18, 2025",
     time: "3:00 PM EST",
     description: "UEFA Champions League knockout rounds. Experience the drama of European football's premier competition.",
-    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    image: "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
   },
   {
-    id: "nba-finals",
-    name: "NBA Finals",
+    id: "nba",
+    name: "NBA",
     category: "Basketball",
     date: "June 5, 2025",
     time: "9:00 PM EST",
     description: "The culmination of the NBA season. Watch the best teams battle for the championship.",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800",
+    image: "https://images.unsplash.com/photo-1563506644863-444710df1e03?w=800",
   },
   {
     id: "nfl-sunday-ticket",
@@ -45,7 +45,7 @@ export const events: Event[] = [
     date: "Every Sunday",
     time: "1:00 PM EST",
     description: "Catch all the NFL action every Sunday. Every game, every play.",
-    image: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=800",
+    image: "https://images.unsplash.com/photo-1732853089231-b02c92052eee?w=800",
   },
   {
     id: "march-madness",
@@ -72,7 +72,7 @@ export const events: Event[] = [
     date: "Every Weekend",
     time: "10:00 AM EST",
     description: "English Premier League matches featuring the best clubs in England.",
-    image: "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
+    image: "https://images.unsplash.com/photo-1683838946268-e0db005a09b4?w=800",
   },
   {
     id: "world-cup",
@@ -81,7 +81,7 @@ export const events: Event[] = [
     date: "TBD 2026",
     time: "Various",
     description: "FIFA World Cup 2026 hosted in North America. The biggest sporting event on the planet.",
-    image: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800",
+    image: "https://images.unsplash.com/photo-1670409693465-5c8fe03c6054?w=800",
   },
 ];
 

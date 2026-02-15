@@ -67,7 +67,7 @@ export const EVENT_SERIES_MAP: Record<string, string> = {
   "champions-league": "KXUCLGAME",
   "premier-league": "KXEPLGAME",
   "world-cup": "KXWCGAME",
-  "nba-finals": "KXNBAGAME",
+  "nba": "KXNBAGAME",
   "march-madness": "KXNCAAMGAME",
   "nfl-sunday-ticket": "KXNFLGAME",
   "ufc-fight-night": "KXUFCGAME",
