@@ -111,6 +111,9 @@ export default function Map({ selectedBar, onClose }: MapProps) {
   }, [selectedBar]);
 
   const isMac = typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent);
+  const primaryModifier = isMac ? "⌘" : "Ctrl";
+  const alternateModifier = isMac ? "Ctrl" : "⌘";
+  const alternatePlatform = isMac ? "Windows" : "macOS";
 
   return (
     <div ref={containerRef} className="relative h-full w-full">
@@ -170,8 +173,8 @@ export default function Map({ selectedBar, onClose }: MapProps) {
 
       {showHint && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 transition-opacity">
-          <p className="rounded-lg bg-black/70 px-4 py-2 text-sm text-white backdrop-blur">
-            Use {isMac ? "⌘" : "Ctrl"} + scroll to zoom the map
+          <p className="rounded-lg bg-black/70 px-4 py-2 text-sm text-white backdrop-blur text-center">
+            Use {primaryModifier} + scroll to zoom the map ({alternateModifier} on {alternatePlatform})
           </p>
         </div>
       )}
