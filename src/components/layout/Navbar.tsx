@@ -1,13 +1,17 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
 const navLinks = [
   { label: "BARS", href: "/" },
-  { label: "EVENTS", href: "/events", isLive: true },
+  { label: "EVENTS", href: "/events" },
   { label: "LEARN MORE", href: "/learn-more" },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   return (
     <nav className="sticky top-0 z-50 border-b border-kalshi-border bg-kalshi-bg/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
@@ -22,7 +26,7 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
-                  link.isLive
+                  pathname === link.href
                     ? "text-kalshi-green"
                     : "text-kalshi-text-secondary hover:text-white"
                 }`}
