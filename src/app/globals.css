@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-kalshi-bg: #0A0C0F;
+  --color-kalshi-card: #1a1d23;
+  --color-kalshi-border: rgba(255, 255, 255, 0.08);
+  --color-kalshi-green: #28CC95;
+  --color-kalshi-red: #ff4d4d;
+  --color-kalshi-text-secondary: #8a8f98;
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--color-kalshi-bg);
+  color: #ffffff;
+}
