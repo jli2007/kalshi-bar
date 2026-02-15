@@ -23,6 +23,41 @@ const getSeriesFromMap = (eventId?: string, eventName?: string): string | null =
   return null;
 };
 
+function normalizeText(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function scoreMarketMatch(query: string, market: KalshiMarket): number {
+  const haystack = normalizeText([
+    market.title,
+    market.subtitle,
+    market.yes_sub_title,
+    market.no_sub_title,
+    market.event_ticker,
+    market.ticker,
+  ]
+    .filter(Boolean)
+    .join(" "));
+  if (!haystack) return 0;
+  const tokens = normalizeText(query).split(" ").filter(Boolean);
+  if (tokens.length === 0) return 0;
+  let hits = 0;
+  for (const token of tokens) {
+    if (haystack.includes(token)) hits += 1;
+  }
+  return hits / tokens.length;
+}
+
+function pickTopByVolume(markets: KalshiMarket[], limit: number): KalshiMarket[] {
+  return [...markets]
+    .sort((a, b) => (b.volume || 0) - (a.volume || 0))
+    .slice(0, limit);
+}
+
+function filterOpenMarkets(markets: KalshiMarket[]): KalshiMarket[] {
+  return markets.filter((market) => market.status === "open" || market.status === "active");
+}
+
 // Get markets for an event (by event ID/slug)
 kalshi.get("/markets/:eventId", async (c) => {
   const eventId = c.req.param("eventId");
@@ -49,27 +84,41 @@ kalshi.get("/markets/:eventId", async (c) => {
 
     let seriesTicker: string | null = mappedSeries || null;
     let markets: KalshiMarket[] = [];
+    const query = [eventName, category].filter(Boolean).join(" ").trim() || searchContext;
 
-    if (seriesTicker) {
-      console.log(`   Fetching markets for series: ${seriesTicker}`);
-      markets = await kalshiService.getMarketsBySeries(seriesTicker, { status: "open" });
-      console.log(`   Found ${markets.length} markets`);
-    }
+    const seriesCandidates: string[] = [];
+    if (seriesTicker) seriesCandidates.push(seriesTicker);
 
-    if (!seriesTicker || markets.length === 0) {
-      const detectedSeries = await kalshiService.getSeriesForEventId(searchContext);
-      if (detectedSeries) {
-        seriesTicker = detectedSeries;
-        console.log(`   Fetching markets for series: ${seriesTicker}`);
-        markets = await kalshiService.getMarketsBySeries(seriesTicker, { status: "open" });
-        console.log(`   Found ${markets.length} markets`);
+    const detectedSeries = await kalshiService.getSeriesForEventId(searchContext);
+    if (detectedSeries) {
+      if (!seriesTicker) seriesTicker = detectedSeries;
+      if (!seriesCandidates.includes(detectedSeries)) {
+        seriesCandidates.push(detectedSeries);
       }
     }
 
-    if (seriesTicker && markets.length === 0) {
-      console.log(`   No open markets found. Retrying without status filter.`);
-      markets = await kalshiService.getMarketsBySeries(seriesTicker);
+    const extraCandidates = await kalshiService.getSeriesCandidates(searchContext, 3);
+    extraCandidates.forEach((candidate) => {
+      if (!seriesCandidates.includes(candidate)) {
+        seriesCandidates.push(candidate);
+      }
+    });
+
+    for (const candidate of seriesCandidates) {
+      console.log(`   Fetching markets for series: ${candidate}`);
+      markets = await kalshiService.getMarketsBySeries(candidate, { status: "open", limit: 200 });
       console.log(`   Found ${markets.length} markets`);
+
+      if (markets.length === 0) {
+        console.log(`   No open markets found. Retrying without status filter.`);
+        markets = await kalshiService.getMarketsBySeries(candidate, { limit: 200 });
+        console.log(`   Found ${markets.length} markets`);
+      }
+
+      if (markets.length > 0) {
+        seriesTicker = candidate;
+        break;
+      }
     }
 
     console.log(`   Series ticker: ${seriesTicker || 'None found'}`);
@@ -78,16 +127,50 @@ kalshi.get("/markets/:eventId", async (c) => {
       return c.json({ eventId, seriesTicker: null, markets: [], count: 0 });
     }
 
+    let openMarkets = filterOpenMarkets(markets);
+    if (openMarkets.length > 0 && query) {
+      const scoredMarkets = openMarkets
+        .map((market) => ({ market, score: scoreMarketMatch(query, market) }))
+        .sort((a, b) => b.score - a.score);
+      const directMatches = scoredMarkets.filter((entry) => entry.score > 0.35).map((entry) => entry.market);
+      if (directMatches.length > 0) {
+        openMarkets = directMatches;
+      } else {
+        const candidates = pickTopByVolume(openMarkets, 80);
+        const tickers = await kalshiService.selectMarketTickers(query, candidates, 12);
+        if (tickers.length > 0) {
+          openMarkets = candidates.filter((market) => tickers.includes(market.ticker));
+        } else {
+          openMarkets = pickTopByVolume(openMarkets, 12);
+        }
+      }
+    }
+
     return c.json({
       eventId,
       seriesTicker,
-      markets,
-      count: markets.length,
+      markets: openMarkets,
+      count: openMarkets.length,
     });
   } catch (error: any) {
     console.error(`   ❌ Error:`, error.message);
     return c.json({ error: error.message || "Internal server error" }, 500);
   }
+});
+
+// Health check for Kalshi API connectivity
+kalshi.get("/health", async (c) => {
+  const series = c.req.query("series") || "KXOSCARS";
+  const params = new URLSearchParams({
+    series_ticker: series,
+    limit: "1",
+  });
+
+  const results = await kalshiService.testConnectivity("/trade-api/v2/markets", params);
+  return c.json({
+    series,
+    results,
+  });
 });
 
 // Get logo for an entity (team, country, person, etc.)
