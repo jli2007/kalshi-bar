@@ -3,9 +3,7 @@ import crypto from 'crypto';
 import type { CandlestickPoint, KalshiMarket, KalshiEvent } from '../types';
 
 const DEFAULT_KALSHI_BASES = [
-  process.env.KALSHI_API_BASE,
-  "https://api.kalshi.com",
-  "https://api.elections.kalshi.com",
+  process.env.KALSHI_API_BASE || "https://api.elections.kalshi.com",
 ]
   .filter(Boolean)
   .map((base) => base!.replace(/\/+$/, ""));
@@ -18,6 +16,8 @@ const openai = new OpenAI({
 export class KalshiService {
   private apiKey: string;
   private privateKey: crypto.KeyObject;
+  private eventsCache = new Map<string, { expiresAt: number; data: KalshiEvent[] }>();
+  private eventsCacheTtlMs = 5 * 60 * 1000;
 
   constructor() {
     this.apiKey = process.env.KALSHI_API_KEY || "";
@@ -133,6 +133,50 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
     }
   }
 
+  async getAllEvents(status: string = "open"): Promise<KalshiEvent[]> {
+    const cacheKey = status || "all";
+    const cached = this.eventsCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.data;
+    }
+
+    const events: KalshiEvent[] = [];
+    let cursor: string | undefined;
+
+    while (true) {
+      const path = `/trade-api/v2/events`;
+      const params = new URLSearchParams({
+        status,
+        limit: "200",
+        with_nested_markets: "true",
+      });
+      if (cursor) params.set("cursor", cursor);
+
+      const response = await this.fetchWithFallback(path, params);
+      if (!response || !response.ok) {
+        if (response) {
+          const errorText = await response.text();
+          console.error(`   HTTP ${response.status}:`, errorText.substring(0, 200));
+        }
+        break;
+      }
+
+      const data = await response.json();
+      const batch = data.events || [];
+      events.push(...batch.map((event: any) => this.mapEvent(event)));
+
+      cursor = data.cursor;
+      if (!cursor || batch.length === 0) break;
+    }
+
+    this.eventsCache.set(cacheKey, {
+      expiresAt: Date.now() + this.eventsCacheTtlMs,
+      data: events,
+    });
+
+    return events;
+  }
+
   async getSeriesCandidates(searchContext: string, limit: number = 3): Promise<string[]> {
     if (!process.env.OPENAI_API_KEY) return [];
 
@@ -165,6 +209,42 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
         .filter((ticker): ticker is string => Boolean(ticker));
     } catch (error: any) {
       console.error(`   OpenAI series candidates error:`, error.message);
+      return [];
+    }
+  }
+
+  async searchSeries(
+    query: string,
+    options: { limit?: number } = {}
+  ): Promise<string[]> {
+    const path = `/trade-api/v2/series`;
+    const limit = options.limit ?? 200;
+    const params = new URLSearchParams({ limit: limit.toString() });
+
+    try {
+      const response = await this.fetchWithFallback(path, params);
+
+      if (!response || !response.ok) {
+        if (response) {
+          const errorText = await response.text();
+          console.error(`   ❌ HTTP ${response.status}:`, errorText.substring(0, 200));
+        }
+        return [];
+      }
+
+      const data = await response.json();
+      const series = data.series || [];
+      const normalizedQuery = query.toLowerCase();
+      const matches = series.filter((s: any) => {
+        const hay = `${s?.series_ticker || ""} ${s?.title || ""} ${s?.subtitle || ""} ${s?.description || ""}`.toLowerCase();
+        return hay.includes(normalizedQuery);
+      });
+
+      return matches
+        .map((s: any) => s?.series_ticker)
+        .filter((ticker: any) => typeof ticker === "string");
+    } catch (error: any) {
+      console.error(`   ❌ Series search error:`, error.message);
       return [];
     }
   }
@@ -533,6 +613,17 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
       image_url: market.image_url || market.icon_url || market.logo_url || null,
       yes_sub_title: market.yes_sub_title,
       no_sub_title: market.no_sub_title,
+    };
+  }
+
+  private mapEvent(event: any): KalshiEvent {
+    return {
+      event_ticker: event.event_ticker,
+      series_ticker: event.series_ticker,
+      title: event.title || event.sub_title || "Unknown Event",
+      subtitle: event.sub_title,
+      category: event.category || "",
+      markets: (event.markets || []).map((m: any) => this.mapMarket(m, event.series_ticker)),
     };
   }
 }
