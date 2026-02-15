@@ -1,6 +1,7 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Bar } from "@/data/bars";
 import { ShineBorder } from "@/components/ui/ShineBorder";
+import Image from "next/image";
 
 export default function BarCard({ bar, onClick }: { bar: Bar; onClick?: () => void }) {
   return (
@@ -10,20 +11,19 @@ export default function BarCard({ bar, onClick }: { bar: Bar; onClick?: () => vo
     >
       <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
 
-      {/* Bar image */}
       {bar.image && (
         <div className="relative overflow-hidden rounded-t-xl">
-          <img
+          <Image
             src={bar.image}
             alt={bar.name}
-            className="h-32 w-full object-cover"
+            fill
+            className="object-cover"
           />
-          <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-kalshi-card to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-kalshi-card to-transparent" />
         </div>
       )}
 
       <div className="p-4">
-        {/* Header row: name + external link */}
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-base font-semibold text-white">{bar.name}</h3>
           <a
@@ -36,12 +36,10 @@ export default function BarCard({ bar, onClick }: { bar: Bar; onClick?: () => vo
           </a>
         </div>
 
-        {/* Address */}
         <p className="mt-1 text-sm text-kalshi-text-secondary">
           {bar.address}, {bar.location}
         </p>
 
-        {/* Events */}
         {bar.events.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1.5">
             {bar.events.map((event) => (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Event } from "@/data/events";
 import type { Bar } from "@/data/bars";
 import { ShineBorder } from "@/components/ui/ShineBorder";
+import Image from "next/image";
 
 interface EventCardProps {
   event: Event;
@@ -15,30 +16,27 @@ export default function EventCard({ event, bars }: EventCardProps) {
     <Link href={`/events/${event.id}`}>
       <div className="relative rounded-xl bg-kalshi-card transition-transform hover:scale-[1.02] cursor-pointer">
         <ShineBorder shineColor="#28CC95" borderWidth={1} duration={10} className="z-10 opacity-70" />
-
-        {/* Event image */}
         <div className="relative overflow-hidden rounded-t-xl">
-          <img
+          <Image
             src={event.image}
             alt={event.name}
+            width={800}
+            height={160}
             className="h-40 w-full object-cover"
           />
-          <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-kalshi-card to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-kalshi-card to-transparent" />
           <span className="absolute top-3 left-3 rounded-sm border border-kalshi-green/70 bg-kalshi-card/80 backdrop-blur-sm px-2 py-0.5 text-xs font-medium text-kalshi-green">
             {event.category}
           </span>
         </div>
 
         <div className="p-4">
-          {/* Event name */}
           <h3 className="text-lg font-bold text-white">{event.name}</h3>
 
-          {/* Date & time */}
           <p className="mt-1 text-sm text-kalshi-text-secondary">
             {event.date} • {event.time}
           </p>
 
-          {/* Preview bars */}
           <div className="mt-3 border-t border-white/10 pt-3">
             <p className="text-xs text-kalshi-text-secondary mb-2">
               {bars.length} bar{bars.length !== 1 ? "s" : ""} showing this event
@@ -47,9 +45,11 @@ export default function EventCard({ event, bars }: EventCardProps) {
               {previewBars.map((bar) => (
                 <div key={bar.name} className="flex items-center gap-2">
                   {bar.image ? (
-                    <img
+                    <Image
                       src={bar.image}
                       alt={bar.name}
+                      width={24}
+                      height={24}
                       className="h-6 w-6 rounded-full object-cover"
                     />
                   ) : (

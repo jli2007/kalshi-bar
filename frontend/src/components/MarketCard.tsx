@@ -74,23 +74,18 @@ export default function MarketCard({ market }: MarketCardProps) {
       <ShineBorder shineColor="#28CC95" borderWidth={1} duration={12} className="z-10 opacity-60" />
 
       <div className="p-5">
-        {/* Title */}
         <h3 className="text-lg font-semibold text-white mb-4">
           {market.title}
         </h3>
 
-        {/* Two column layout */}
         <div className="flex gap-6">
-          {/* Left: Market info */}
           <div className="flex-1">
-            {/* Header row */}
             <div className="flex items-center gap-8 text-xs text-kalshi-text-secondary mb-3">
               <span className="w-24">Market</span>
               <span className="w-16 text-center">Pays out</span>
               <span className="w-16 text-center">Odds</span>
             </div>
 
-            {/* Yes row */}
             <div className="flex items-center gap-8 mb-2">
               <div className="w-24 flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-kalshi-green/20 flex items-center justify-center">
@@ -106,7 +101,6 @@ export default function MarketCard({ market }: MarketCardProps) {
               </div>
             </div>
 
-            {/* No row */}
             <div className="flex items-center gap-8 mb-4">
               <div className="w-24 flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center">
@@ -122,15 +116,12 @@ export default function MarketCard({ market }: MarketCardProps) {
               </div>
             </div>
 
-            {/* Volume */}
             <p className="text-sm text-kalshi-text-secondary">
               ${(market.volume / 100).toLocaleString()} vol
             </p>
           </div>
 
-          {/* Right: Chart */}
           <div className="w-64 flex flex-col">
-            {/* Chart legend */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-4 text-xs">
                 <span className="flex items-center gap-1">
@@ -142,8 +133,7 @@ export default function MarketCard({ market }: MarketCardProps) {
               <span className="text-kalshi-green font-semibold text-sm">Kalshi</span>
             </div>
 
-            {/* Chart */}
-            <div className="flex-1 min-h-[100px]">
+            <div className="flex-1 min-h-25">
               <PriceChart data={candlesticks} loading={loading} />
             </div>
           </div>

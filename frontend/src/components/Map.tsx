@@ -6,6 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { ExternalLinkIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { ShineBorder } from "@/components/ui/ShineBorder";
 import { type Bar } from "@/data/bars";
+import Image from "next/image";
 
 interface MapProps {
   selectedBar: Bar | null;
@@ -77,7 +78,6 @@ export default function Map({ selectedBar, onClose }: MapProps) {
     };
   }, []);
 
-  // Fly to selected bar and drop a marker
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -114,18 +114,18 @@ export default function Map({ selectedBar, onClose }: MapProps) {
 
   return (
     <div ref={containerRef} className="relative h-full w-full">
-      {/* Selected bar overlay */}
       {selectedBar && (
         <div className="absolute left-4 top-4 z-10 w-80 rounded-xl bg-kalshi-bg/90 backdrop-blur-md">
           <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
           {selectedBar.image && (
             <div className="relative overflow-hidden rounded-t-xl">
-              <img
+              <Image
                 src={selectedBar.image}
                 alt={selectedBar.name}
-                className="h-32 w-full object-cover"
+                fill
+                className="object-cover"
               />
-              <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-kalshi-bg/90 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-kalshi-bg/90 to-transparent" />
             </div>
           )}
           <div className="p-4">
@@ -167,7 +167,6 @@ export default function Map({ selectedBar, onClose }: MapProps) {
         </div>
       )}
 
-      {/* Scroll hint overlay */}
       {showHint && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 transition-opacity">
           <p className="rounded-lg bg-black/70 px-4 py-2 text-sm text-white backdrop-blur">

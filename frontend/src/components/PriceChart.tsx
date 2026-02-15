@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from 'react';
+
 interface CandlestickPoint {
   ts: number;
   price: number;
@@ -11,6 +13,10 @@ interface PriceChartProps {
 }
 
 export default function PriceChart({ data, loading }: PriceChartProps) {
+  const [gradientId] = useState(() => 
+    `chart-gradient-${Math.random().toString(36).substr(2, 9)}`
+  );
+
   if (loading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
@@ -34,49 +40,41 @@ export default function PriceChart({ data, loading }: PriceChartProps) {
     );
   }
 
-  // Calculate chart dimensions
   const prices = data.map(d => d.price);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
   const range = maxPrice - minPrice || 10;
   const padding = range * 0.1;
 
-  // Normalize prices for SVG
   const points = data.map((d, i) => {
     const x = (i / (data.length - 1)) * 100;
     const y = 100 - ((d.price - minPrice + padding) / (range + 2 * padding)) * 100;
     return `${x},${y}`;
   }).join(' ');
 
-  // Determine line color based on trend
   const firstPrice = prices[0];
   const lastPrice = prices[prices.length - 1];
   const isUp = lastPrice >= firstPrice;
   const lineColor = isUp ? "#28CC95" : "#ef4444";
-  const gradientId = `chart-gradient-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
     <div className="h-full w-full relative">
-      {/* Y-axis labels */}
       <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-kalshi-text-secondary w-8 text-right">
         <span>{Math.round(maxPrice)}%</span>
         <span>{Math.round((maxPrice + minPrice) / 2)}%</span>
         <span>{Math.round(minPrice)}%</span>
       </div>
 
-      {/* Chart area */}
       <div className="absolute inset-0 pr-10">
         <svg
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           className="w-full h-full"
         >
-          {/* Horizontal grid lines */}
           <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" vectorEffect="non-scaling-stroke" />
           <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" vectorEffect="non-scaling-stroke" />
           <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" vectorEffect="non-scaling-stroke" />
 
-          {/* Gradient fill */}
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={lineColor} stopOpacity="0.3" />
@@ -88,7 +86,6 @@ export default function PriceChart({ data, loading }: PriceChartProps) {
             points={`0,100 ${points} 100,100`}
           />
 
-          {/* Price line */}
           <polyline
             fill="none"
             stroke={lineColor}
@@ -99,7 +96,6 @@ export default function PriceChart({ data, loading }: PriceChartProps) {
             vectorEffect="non-scaling-stroke"
           />
 
-          {/* End point dot */}
           {data.length > 0 && (
             <circle
               cx="100"

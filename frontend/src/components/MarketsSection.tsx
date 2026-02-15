@@ -48,7 +48,6 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
 
         const data: MarketsResponse = await res.json();
 
-        // Group markets by event_ticker
         const grouped = new Map<string, KalshiMarket[]>();
         for (const market of data.markets) {
           const eventTicker = market.event_ticker || market.ticker;
@@ -58,17 +57,14 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
           grouped.get(eventTicker)!.push(market);
         }
 
-        // Convert to array and extract titles
         const events: GroupedEvent[] = Array.from(grouped.entries()).map(([eventTicker, markets]) => {
-          // Extract event title from market title (remove outcome-specific parts)
           let title = markets[0]?.title || "Unknown Event";
-          // Clean up title - often ends with "Winner?" or similar
           title = title.replace(/\s*Winner\??$/, "");
 
           return {
             eventTicker,
             title,
-            markets: markets.sort((a, b) => (b.yes_bid || 0) - (a.yes_bid || 0)), // Sort by odds
+            markets: markets.sort((a, b) => (b.yes_bid || 0) - (a.yes_bid || 0)),
           };
         });
 
@@ -81,6 +77,7 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
     }
 
     fetchMarkets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
   if (loading) {
