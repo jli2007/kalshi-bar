@@ -23,12 +23,13 @@ interface GroupedEvent {
   markets: KalshiMarket[];
 }
 
-const MAX_EVENTS = 3;
+const INITIAL_EVENTS = 3;
 
 export default function MarketsSection({ eventId, eventName, category }: MarketsSectionProps) {
   const [groupedEvents, setGroupedEvents] = useState<GroupedEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     async function fetchMarkets() {
@@ -38,6 +39,7 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
         const params = new URLSearchParams();
         if (eventName) params.set("name", eventName);
         if (category) params.set("category", category);
+        params.set("limit", "60");
         const queryString = params.toString();
         const res = await fetch(`${apiUrl}/kalshi/markets/${eventId}${queryString ? `?${queryString}` : ""}`);
 
@@ -120,7 +122,8 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
     );
   }
 
-  const displayedEvents = groupedEvents.slice(0, MAX_EVENTS);
+  const displayedEvents = showAll ? groupedEvents : groupedEvents.slice(0, INITIAL_EVENTS);
+  const hiddenCount = groupedEvents.length - INITIAL_EVENTS;
 
   return (
     <div className="mb-8">
@@ -138,6 +141,24 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
           />
         ))}
       </div>
+
+      {hiddenCount > 0 && !showAll && (
+        <button
+          onClick={() => setShowAll(true)}
+          className="mt-4 w-full py-3 rounded-xl border border-kalshi-green/30 bg-kalshi-green/5 text-kalshi-green font-medium text-sm hover:bg-kalshi-green/10 transition-colors"
+        >
+          See {hiddenCount} more event{hiddenCount > 1 ? "s" : ""}
+        </button>
+      )}
+
+      {showAll && groupedEvents.length > INITIAL_EVENTS && (
+        <button
+          onClick={() => setShowAll(false)}
+          className="mt-4 w-full py-3 rounded-xl border border-white/10 bg-white/5 text-kalshi-text-secondary font-medium text-sm hover:bg-white/10 transition-colors"
+        >
+          Show less
+        </button>
+      )}
     </div>
   );
 }
