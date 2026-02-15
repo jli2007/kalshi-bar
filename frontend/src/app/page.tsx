@@ -17,7 +17,8 @@ export default function Home() {
   const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
 
   useEffect(() => {
-    setSelectedBar(bars[Math.floor(Math.random() * bars.length)]);
+    const brickyard = bars.find((b) => b.name === "Brickyard Craft kitchen & Bar");
+    setSelectedBar(brickyard ?? bars[0]);
   }, []);
 
   const handleBarClick = (bar: Bar) => {
@@ -27,9 +28,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      <Navbar onSelectBar={handleBarClick} />
       <div className="h-[calc(100vh-3.5rem)] w-full">
-        <Map selectedBar={selectedBar} onClose={() => setSelectedBar(null)} onSelectBar={setSelectedBar} />
+        <Map
+          selectedBar={selectedBar}
+          onClose={() => setSelectedBar(null)}
+          onSelectBar={setSelectedBar}
+          visibleBars={bars}
+        />
       </div>
       <div className="mx-auto max-w-7xl px-4 py-8">
         {categories.map((tag, index) => {

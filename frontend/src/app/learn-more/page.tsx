@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import { MockTweetCard, type MockTweet } from "@/components/ui/tweet-card";
+import { ReviewCard, type MockReview } from "@/components/ui/review-card";
 import { bars } from "@/data/bars";
 
 // Get bars that have images for their tweets
@@ -63,61 +64,67 @@ const barTweets: MockTweet[] = [
   },
 ];
 
-// Tweets FROM customers (people visiting bars)
-const customerTweets: MockTweet[] = [
+// Reviews FROM customers (people visiting bars) - mixed platforms
+const customerReviews: MockReview[] = [
   {
     user: {
       name: "Sarah Chen",
-      handle: "sarahc_nyc",
       avatar: "https://i.pravatar.cc/150?u=sarah",
-      verified: false,
     },
-    text: "Just had the best Old Fashioned of my life at Death & Co. The bartenders here are actual artists 🎨",
+    platform: "google",
+    rating: 5,
+    text: "Just had the best Old Fashioned of my life at Death & Co. The bartenders here are actual artists. Incredible atmosphere and top-notch cocktails.",
+    image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop",
   },
   {
     user: {
       name: "Mike Rodriguez",
-      handle: "mikerodnyc",
       avatar: "https://i.pravatar.cc/150?u=mike",
-      verified: false,
     },
-    text: "Finally got into Please Don't Tell through the phone booth. Worth every second of the wait 🔥",
+    platform: "google",
+    rating: 4,
+    text: "Finally got into Please Don't Tell through the phone booth. Worth every second of the wait. Drinks were creative and the speakeasy vibe is unmatched.",
+    image: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&h=400&fit=crop",
   },
   {
     user: {
       name: "Emma Wilson",
-      handle: "emmawilson",
       avatar: "https://i.pravatar.cc/150?u=emma",
-      verified: true,
     },
-    text: "The vibe at Attaboy is unmatched. Told them I wanted something citrusy and they absolutely delivered 🍋",
+    platform: "yelp",
+    rating: 5,
+    text: "The vibe at Attaboy is unmatched. Told them I wanted something citrusy and they absolutely delivered. No menu, just trust the bartenders.",
+    image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&h=400&fit=crop",
   },
   {
     user: {
       name: "James Park",
       handle: "jamespark",
       avatar: "https://i.pravatar.cc/150?u=james",
-      verified: false,
     },
+    platform: "twitter",
     text: "Blind Tiger has the best craft beer selection in the village. 20 taps and every single one is fire 🍺",
+    image: "https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=600&h=400&fit=crop",
   },
   {
     user: {
       name: "Olivia Martinez",
-      handle: "oliviam",
+      handle: "olivia.martinez",
       avatar: "https://i.pravatar.cc/150?u=olivia",
-      verified: false,
     },
+    platform: "instagram",
     text: "Live jazz at The Velvet Room on a Tuesday night. This city never disappoints 🎷",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=400&fit=crop",
   },
   {
     user: {
       name: "David Kim",
       handle: "davidkim",
       avatar: "https://i.pravatar.cc/150?u=david",
-      verified: false,
     },
-    text: "The Dead Rabbit Irish Coffee hits different when it's 30 degrees outside ☕️",
+    platform: "tiktok",
+    text: "The Dead Rabbit Irish Coffee hits different when it's 30 degrees outside. Best Irish bar in NYC, no debate.",
+    image: "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?w=600&h=400&fit=crop",
   },
 ];
 
@@ -141,12 +148,12 @@ export default function LearnMorePage() {
           </div>
         </section>
 
-        {/* Customer Tweets Section */}
+        {/* Customer Reviews Section */}
         <section className="mt-12">
           <h2 className="text-xl font-semibold text-white mb-4">What Customers Have Been Saying</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
-            {customerTweets.map((tweet) => (
-              <MockTweetCard key={tweet.user.handle} tweet={tweet} className="h-full" />
+            {customerReviews.map((review) => (
+              <ReviewCard key={review.user.name} review={review} className="h-full" />
             ))}
           </div>
         </section>

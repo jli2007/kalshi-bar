@@ -22,6 +22,17 @@ export const bars: Bar[] = [
     tags: ["Craft kitchen", "Top rated"],
   },
   {
+    name: "Sluggers World Class Sports Bar",
+    address: "3540 N Clark St",
+    location: "Chicago, IL",
+    coordinates: [-87.6559, 41.9484],
+    image:
+      "https://dottie.enjoyillinois.com/assets/Tourism-Operators/images/itims/24039_Slugs_Front_Web__FocusFillWyIwLjAwIiwiMC4wMCIsMjAwMCw5NTBd.jpg",
+    website: "https://www.sluggersbar.com/",
+    events: ["MLB Playoffs", "NFL Sunday Ticket", "March Madness"],
+    tags: ["Legendary", "Big screens"],
+  },
+  {
     name: "Finnerty's",
     address: "18 W 33rd St",
     location: "New York, NY",

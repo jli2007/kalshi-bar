@@ -5,18 +5,18 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { ExternalLinkIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { ShineBorder } from "@/components/ui/ShineBorder";
-import { bars, type Bar } from "@/data/bars";
+import { type Bar } from "@/data/bars";
 
 interface MapProps {
   selectedBar: Bar | null;
   onClose: () => void;
   onSelectBar: (bar: Bar) => void;
+  visibleBars?: Bar[];
 }
 
-export default function Map({ selectedBar, onClose, onSelectBar }: MapProps) {
+export default function Map({ selectedBar, onClose }: MapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<{ bar: Bar; marker: mapboxgl.Marker; el: HTMLDivElement }[]>([]);
   const [showHint, setShowHint] = useState(false);
   const hintTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -28,10 +28,10 @@ export default function Map({ selectedBar, onClose, onSelectBar }: MapProps) {
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: "mapbox://styles/mapbox/standard",
-      center: [-74.006, 40.7128],
-      zoom: 2.5,
-      pitch: 0,
-      bearing: 0,
+      center: [-74.0082, 40.7133],
+      zoom: 18,
+      pitch: 55,
+      bearing: -17.6,
       scrollZoom: false,
       antialias: true,
       projection: "globe",
@@ -77,77 +77,21 @@ export default function Map({ selectedBar, onClose, onSelectBar }: MapProps) {
     };
   }, []);
 
-  // Create all bar markers once the map is ready
+  // Fly to selected bar and highlight its building
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    const createMarkers = () => {
-      // Remove any existing markers
-      markersRef.current.forEach((m) => m.marker.remove());
-      markersRef.current = [];
-
-      bars.forEach((bar) => {
-        const el = document.createElement("div");
-        el.style.cursor = "pointer";
-        el.style.transformOrigin = "bottom center";
-        el.innerHTML = `<div class="bar-pin" style="
-          width: 28px; height: 28px;
-          background: #28CC95;
-          border: 2px solid rgba(255,255,255,0.5);
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          transition: all 0.3s ease;
-        "></div>`;
-
-        el.addEventListener("click", (e) => {
-          e.stopPropagation();
-          onSelectBar(bar);
-        });
-
-        const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
-          .setLngLat(bar.coordinates)
-          .addTo(map);
-
-        markersRef.current.push({ bar, marker, el });
-      });
-
-      // Scale all markers with zoom
-      const scaleMarkers = () => {
-        const zoom = map.getZoom();
-        const scale = Math.min(1, Math.max(0.3, (zoom - 2) / 14 * 0.7 + 0.3));
-        markersRef.current.forEach(({ el }) => {
-          el.style.transform = `scale(${scale})`;
-        });
-      };
-
-      scaleMarkers();
-      map.on("zoom", scaleMarkers);
+    const removeHighlight = () => {
+      if (map.getLayer("building-highlight")) map.removeLayer("building-highlight");
+      if (map.getSource("building-highlight")) map.removeSource("building-highlight");
     };
 
-    if (map.isStyleLoaded()) {
-      createMarkers();
-    } else {
-      map.once("load", createMarkers);
-    }
-  }, [onSelectBar]);
+    removeHighlight();
 
-  // Update marker styles and fly to selected bar
-  useEffect(() => {
-    markersRef.current.forEach(({ bar, el }) => {
-      const pin = el.querySelector(".bar-pin") as HTMLElement;
-      if (!pin) return;
-      const isSelected = selectedBar?.name === bar.name;
-      pin.style.background = isSelected ? "#28CC95" : "#28CC95";
-      pin.style.border = isSelected ? "3px solid white" : "2px solid rgba(255,255,255,0.5)";
-      pin.style.boxShadow = isSelected ? "0 0 12px rgba(40,204,149,0.6)" : "none";
-      pin.style.width = isSelected ? "32px" : "28px";
-      pin.style.height = isSelected ? "32px" : "28px";
-      el.style.zIndex = isSelected ? "10" : "1";
-    });
+    if (!selectedBar) return;
 
-    if (!selectedBar || !mapRef.current) return;
-    mapRef.current.flyTo({
+    map.flyTo({
       center: selectedBar.coordinates,
       zoom: 18,
       pitch: 55,
@@ -155,6 +99,68 @@ export default function Map({ selectedBar, onClose, onSelectBar }: MapProps) {
       duration: 2000,
       essential: true,
     });
+
+    const findBuilding = () => {
+      const point = map.project(selectedBar.coordinates);
+      const bbox: [mapboxgl.PointLike, mapboxgl.PointLike] = [
+        [point.x - 20, point.y - 20],
+        [point.x + 20, point.y + 20],
+      ];
+      const features = map.queryRenderedFeatures(bbox);
+      return features.find(
+        (f) =>
+          (f.sourceLayer === "building" ||
+            f.layer?.id?.toLowerCase().includes("building") ||
+            f.layer?.type === "fill-extrusion") &&
+          (f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon")
+      );
+    };
+
+    const applyHighlight = (building: mapboxgl.GeoJSONFeature) => {
+      removeHighlight();
+      map.addSource("building-highlight", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: building.geometry,
+          properties: building.properties,
+        } as GeoJSON.Feature,
+      });
+      map.addLayer({
+        id: "building-highlight",
+        type: "fill-extrusion",
+        source: "building-highlight",
+        paint: {
+          "fill-extrusion-color": "#28CC95",
+          "fill-extrusion-opacity": 0.7,
+          "fill-extrusion-height": (building.properties?.height as number) ?? 20,
+          "fill-extrusion-base": (building.properties?.min_height as number) ?? 0,
+        },
+      });
+    };
+
+    let retryTimer: ReturnType<typeof setTimeout>;
+
+    const highlightBuilding = () => {
+      removeHighlight();
+      const building = findBuilding();
+      if (building) {
+        applyHighlight(building);
+      } else {
+        // Tiles may still be loading — retry once after a short delay
+        retryTimer = setTimeout(() => {
+          const b = findBuilding();
+          if (b) applyHighlight(b);
+        }, 500);
+      }
+    };
+
+    map.once("idle", highlightBuilding);
+
+    return () => {
+      map.off("idle", highlightBuilding);
+      clearTimeout(retryTimer);
+    };
   }, [selectedBar]);
 
   const isMac = typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent);
