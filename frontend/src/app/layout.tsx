@@ -7,9 +7,35 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kalshi-bar.vercel.app";
+const title = "Kalshi";
+const description = "Event contracts trading platform";
+
 export const metadata: Metadata = {
-  title: "Kalshi",
-  description: "Event contracts trading platform",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: siteUrl,
+    siteName: title,
+    type: "website",
+    images: [
+      {
+        url: "/banner.png",
+        width: 1200,
+        height: 630,
+        alt: "Kalshi",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/banner.png"],
+  },
 };
 
 export default function RootLayout({
