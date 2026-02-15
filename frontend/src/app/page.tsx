@@ -191,8 +191,8 @@ export default function LandingPage() {
 
               {/* Bet & Watch — spans 1 col wide on lg */}
               <BentoCard
-                title="Bet & Watch"
-                description="Place bets while watching the game. Get the full experience in one place."
+                title="Trade & Watch"
+                description="Trade while watching the game. Get the full experience in one place."
                 backgroundImage="/kalshibet.jpeg"
                 icon={
                   <svg
