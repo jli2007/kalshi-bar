@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { MagnifyingGlassIcon, Cross2Icon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, Cross2Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { bars, type Bar } from "@/data/bars";
 
@@ -21,6 +21,7 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const blurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const results =
@@ -154,16 +155,110 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
           </div>
         </div>
 
-        {/* Right: Auth Buttons */}
+        {/* Right: Auth Buttons + Hamburger */}
         <div className="flex items-center gap-3">
-          <button className="text-sm font-medium text-kalshi-text-secondary transition-colors hover:text-white">
+          <button className="hidden text-sm font-medium text-kalshi-text-secondary transition-colors hover:text-white sm:block">
             Log in
           </button>
-          <button className="rounded-full bg-kalshi-green px-4 py-1.5 text-sm font-semibold text-black transition-opacity hover:opacity-90">
+          <button className="hidden rounded-full bg-kalshi-green px-4 py-1.5 text-sm font-semibold text-black transition-opacity hover:opacity-90 sm:block">
             Sign up
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-kalshi-text-secondary transition-colors hover:text-white md:hidden"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <Cross2Icon className="h-5 w-5" />
+            ) : (
+              <HamburgerMenuIcon className="h-5 w-5" />
+            )}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="border-t border-kalshi-border bg-kalshi-bg/95 backdrop-blur-md md:hidden">
+          <div className="px-4 py-3">
+            {/* Mobile Search */}
+            <div className="relative mb-3">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
+              <input
+                type="text"
+                placeholder="Search for bars..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                className="h-10 w-full rounded-lg border border-kalshi-border bg-kalshi-card pl-9 pr-8 text-sm text-white placeholder-kalshi-text-secondary outline-none transition-colors focus:border-kalshi-text-secondary"
+              />
+              {query && (
+                <button
+                  onClick={() => {
+                    setQuery("");
+                    setOpen(false);
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-kalshi-text-secondary transition-colors hover:text-white"
+                >
+                  <Cross2Icon className="h-3.5 w-3.5" />
+                </button>
+              )}
+              {open && results.length > 0 && (
+                <div className="absolute left-0 top-full mt-1 w-full overflow-hidden rounded-lg border border-kalshi-border bg-kalshi-card shadow-lg">
+                  {results.map((bar, i) => (
+                    <button
+                      key={bar.name}
+                      onMouseDown={() => {
+                        handleSelect(bar);
+                        setMobileMenuOpen(false);
+                      }}
+                      onMouseEnter={() => setHighlightIndex(i)}
+                      className={`flex w-full flex-col px-3 py-2 text-left transition-colors ${
+                        i === highlightIndex ? "bg-white/10" : "hover:bg-white/5"
+                      }`}
+                    >
+                      <span className="text-sm font-medium text-white">{bar.name}</span>
+                      <span className="text-xs text-kalshi-text-secondary">{bar.location}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Nav Links */}
+            <div className="flex flex-col gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    pathname === link.href
+                      ? "bg-kalshi-green/10 text-kalshi-green"
+                      : pathname.startsWith("/events") && link.href === "/events"
+                        ? "bg-kalshi-green/10 text-kalshi-green"
+                        : "text-kalshi-text-secondary hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile Auth Buttons */}
+            <div className="mt-3 flex gap-2 border-t border-kalshi-border pt-3 sm:hidden">
+              <button className="flex-1 rounded-lg border border-kalshi-border py-2 text-sm font-medium text-kalshi-text-secondary transition-colors hover:text-white">
+                Log in
+              </button>
+              <button className="flex-1 rounded-full bg-kalshi-green py-2 text-sm font-semibold text-black transition-opacity hover:opacity-90">
+                Sign up
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

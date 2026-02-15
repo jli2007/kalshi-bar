@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kalshi Bar
+
+![Kalshi Bar favicon](frontend/public/favicon.ico)
+
+A curated discovery experience for sports bars and event watch parties, with live Kalshi market snapshots and a map-first UI.
+
+## Highlights
+- Map-driven bar discovery with rich cards and event badges
+- Event detail pages with related Kalshi markets and charts
+- Optimized image rendering and consistent card layouts
+- SEO + social preview metadata (Open Graph + Twitter)
+
+## Tech Stack
+- Next.js (App Router)
+- Tailwind CSS
+- Hono + Bun backend for Kalshi API proxying
+- Mapbox GL
+
+## Monorepo Layout
+- `frontend/` — Next.js UI
+- `backend/` — Hono service for Kalshi data, logos, and candlesticks
 
 ## Getting Started
 
-First, run the development server:
-
+### Frontend
 ```bash
+cd frontend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Frontend (`frontend/.env.local`)
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
+NEXT_PUBLIC_SITE_URL=https://kalshi-bar.vercel.app
+```
 
-## Learn More
+### Backend (`backend/.env.local`)
+```
+KALSHI_API_KEY=...
+KALSHI_PRIVATE_KEY_PATH=./kalshi_private_key.pem
+# or
+KALSHI_PRIVATE_KEY_BASE64=...
+OPENAI_API_KEY=...
+KALSHI_API_BASE=https://api.elections.kalshi.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
+- If Kalshi main API (`api.kalshi.com`) is unreachable in your hosting environment, the elections API is used instead.
+- Logo lookups are rate limited by third-party providers; fallbacks are used when limits are hit.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy
+- Frontend: Vercel
+- Backend: Railway (or any Node/Bun-compatible host)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+MIT

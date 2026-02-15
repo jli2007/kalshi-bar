@@ -19,21 +19,27 @@ export default function Map({ selectedBar, onClose }: MapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [showHint, setShowHint] = useState(false);
+  const [hintMessage, setHintMessage] = useState("");
   const hintTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartRef = useRef<{ touches: number; y: number } | null>(null);
 
   useEffect(() => {
     if (mapRef.current || !containerRef.current) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: "mapbox://styles/mapbox/standard",
       center: [-74.0082, 40.7133],
-      zoom: 18,
+      zoom: 15.5,
       pitch: 55,
       bearing: -17.6,
       scrollZoom: false,
+      dragPan: !isTouchDevice,
+      touchZoomRotate: false,
       antialias: true,
       projection: "globe",
     });
@@ -55,6 +61,13 @@ export default function Map({ selectedBar, onClose }: MapProps) {
 
     const container = containerRef.current;
 
+    const showHintWithMessage = (message: string) => {
+      setHintMessage(message);
+      setShowHint(true);
+      if (hintTimeout.current) clearTimeout(hintTimeout.current);
+      hintTimeout.current = setTimeout(() => setShowHint(false), 1500);
+    };
+
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault();
@@ -62,16 +75,50 @@ export default function Map({ selectedBar, onClose }: MapProps) {
         map.scrollZoom.wheel(e);
         setTimeout(() => map.scrollZoom.disable(), 200);
       } else {
-        setShowHint(true);
-        if (hintTimeout.current) clearTimeout(hintTimeout.current);
-        hintTimeout.current = setTimeout(() => setShowHint(false), 1500);
+        const isMacOS = /Mac/.test(navigator.userAgent);
+        showHintWithMessage(`Use ${isMacOS ? "⌘" : "Ctrl"} + scroll to zoom`);
       }
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartRef.current = {
+        touches: e.touches.length,
+        y: e.touches[0]?.clientY ?? 0,
+      };
+
+      if (e.touches.length >= 2) {
+        // Two or more fingers - enable map interaction
+        map.dragPan.enable();
+        map.touchZoomRotate.enable();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1 && touchStartRef.current?.touches === 1) {
+        // Single finger - show hint and let page scroll
+        showHintWithMessage("Use two fingers to move the map");
+      }
+    };
+
+    const handleTouchEnd = () => {
+      // Disable map touch interaction after gesture ends
+      if (isTouchDevice) {
+        map.dragPan.disable();
+        map.touchZoomRotate.disable();
+      }
+      touchStartRef.current = null;
+    };
+
     container.addEventListener("wheel", handleWheel, { passive: false });
+    container.addEventListener("touchstart", handleTouchStart, { passive: true });
+    container.addEventListener("touchmove", handleTouchMove, { passive: true });
+    container.addEventListener("touchend", handleTouchEnd, { passive: true });
 
     return () => {
       container.removeEventListener("wheel", handleWheel);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
       if (hintTimeout.current) clearTimeout(hintTimeout.current);
       map.remove();
       mapRef.current = null;
@@ -86,7 +133,7 @@ export default function Map({ selectedBar, onClose }: MapProps) {
 
     map.flyTo({
       center: selectedBar.coordinates,
-      zoom: 18,
+      zoom: 15.5,
       pitch: 55,
       bearing: -17.6,
       duration: 2000,
@@ -110,13 +157,8 @@ export default function Map({ selectedBar, onClose }: MapProps) {
     };
   }, [selectedBar]);
 
-  const isMac = typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent);
-  const primaryModifier = isMac ? "⌘" : "Ctrl";
-  const alternateModifier = isMac ? "Ctrl" : "⌘";
-  const alternatePlatform = isMac ? "Windows" : "macOS";
-
   return (
-    <div ref={containerRef} className="relative h-full w-full">
+    <div ref={containerRef} className="relative h-full w-full touch-pan-y">
       {selectedBar && (
         <div className="absolute left-4 top-4 z-10 w-80 rounded-xl bg-kalshi-bg/90 backdrop-blur-md">
           <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
@@ -174,7 +216,7 @@ export default function Map({ selectedBar, onClose }: MapProps) {
       {showHint && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 transition-opacity">
           <p className="rounded-lg bg-black/70 px-4 py-2 text-sm text-white backdrop-blur text-center">
-            Use {primaryModifier} + scroll to zoom the map ({alternateModifier} on {alternatePlatform})
+            {hintMessage}
           </p>
         </div>
       )}
