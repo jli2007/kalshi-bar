@@ -16,10 +16,18 @@ export class KalshiService {
     this.apiKey = process.env.KALSHI_API_KEY || "";
 
     try {
-      if (process.env.KALSHI_PRIVATE_KEY_BASE64) {
-        const keyBytes = Buffer.from(process.env.KALSHI_PRIVATE_KEY_BASE64, 'base64');
-        this.privateKey = crypto.createPrivateKey(keyBytes);
-        console.log('   🔑 Private key loaded from base64');
+      const inlineKey = process.env.KALSHI_PRIVATE_KEY;
+      const base64Key = process.env.KALSHI_PRIVATE_KEY_BASE64;
+
+      if (inlineKey || base64Key) {
+        const rawValue = (inlineKey || base64Key || '').trim();
+        // Support both literal PEM strings and base64 encoded keys coming from env vars.
+        const keySource = rawValue.includes('BEGIN')
+          ? rawValue.replace(/\\n/g, '\n')
+          : Buffer.from(rawValue, 'base64');
+
+        this.privateKey = crypto.createPrivateKey(keySource);
+        console.log('   🔑 Private key loaded from environment');
       } else {
         const fs = require('fs');
         const keyPath = process.env.KALSHI_PRIVATE_KEY_PATH || './kalshi_private_key.pem';
