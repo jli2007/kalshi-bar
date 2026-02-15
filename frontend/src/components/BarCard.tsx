@@ -5,7 +5,7 @@ import { ShineBorder } from "@/components/ui/ShineBorder";
 export default function BarCard({ bar }: { bar: Bar }) {
   return (
     <div className="relative rounded-xl bg-kalshi-card">
-      <ShineBorder shineColor="#28CC95" borderWidth={1} duration={10} className="z-10 opacity-70" />
+      <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
 
       {/* Bar image */}
       {bar.image && (
