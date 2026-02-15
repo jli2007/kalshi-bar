@@ -12,11 +12,12 @@ export default function BarCard({ bar, onClick }: { bar: Bar; onClick?: () => vo
       <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
 
       {bar.image && (
-        <div className="relative overflow-hidden rounded-t-xl">
+        <div className="relative h-36 overflow-hidden rounded-t-xl sm:h-40">
           <Image
             src={bar.image}
             alt={bar.name}
             fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover"
           />
           <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-kalshi-card to-transparent" />

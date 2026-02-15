@@ -118,11 +118,12 @@ export default function Map({ selectedBar, onClose }: MapProps) {
         <div className="absolute left-4 top-4 z-10 w-80 rounded-xl bg-kalshi-bg/90 backdrop-blur-md">
           <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
           {selectedBar.image && (
-            <div className="relative overflow-hidden rounded-t-xl">
+            <div className="relative h-32 overflow-hidden rounded-t-xl">
               <Image
                 src={selectedBar.image}
                 alt={selectedBar.name}
                 fill
+                sizes="320px"
                 className="object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-kalshi-bg/90 to-transparent" />

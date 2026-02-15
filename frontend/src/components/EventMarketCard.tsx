@@ -168,12 +168,15 @@ export default function EventMarketCard({
                 >
                   <div className="flex-1 flex items-center gap-3">
                     {outcome.logoUrl ? (
-                      <Image
-                        src={outcome.logoUrl}
-                        alt={outcome.label}
-                        fill
-                        className="object-cover"
-                      />
+                      <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                        <Image
+                          src={outcome.logoUrl}
+                          alt={outcome.label}
+                          fill
+                          sizes="32px"
+                          className="object-cover"
+                        />
+                      </div>
                     ) : (
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium"
