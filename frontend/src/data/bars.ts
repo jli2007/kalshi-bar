@@ -49,7 +49,7 @@ export const bars: Bar[] = [
     location: "Bronx, NY",
     coordinates: [-73.9264, 40.8268],
     image:
-      "https://stanssportsbar.com/wp-content/uploads/2022/04/Stans-Logo-Darker-2.png",
+      "https://stanssportsbar.com/wp-content/uploads/2022/04/59601880_10219030067245563_7972149524095303680_n.jpg",
     website: "https://stanssportsbar.com/",
     events: ["Yankees Watch Party", "NBA All-Star Game"],
     tags: ["Classic", "Legendary"],
@@ -71,7 +71,7 @@ export const bars: Bar[] = [
     location: "New York, NY",
     coordinates: [-74.0063, 40.7085],
     image:
-      "https://images.getbento.com/accounts/b6bbbbf288efff1f22635abb9e9f66ce/media/images/541946986logo.png",
+      "https://images.getbento.com/accounts/3b01e418e3ca1e92f07ee4f1728fc32f/media/images/FiDi.png",
     website: "https://www.stoutnyc.com/",
     events: ["NFL Sunday Ticket", "March Madness", "Oscars Watch Party"],
     tags: ["Top rated", "Big screens"],
@@ -93,7 +93,7 @@ export const bars: Bar[] = [
     location: "New York, NY",
     coordinates: [-74.0087, 40.7099],
     image:
-      "https://images.squarespace-cdn.com/content/v1/663bdcf068c65c071caa1820/76fd80e6-0a1d-4002-9ad0-3dee4e3f7d08/IRISH_AMERICAN_LOGO_Y.png",
+      "https://images.squarespace-cdn.com/content/v1/663bdcf068c65c071caa1820/c93cc418-eeac-4705-897d-ce9ed1af35e1/10.jpg",
     website: "https://www.irishamericanpubnyc.com/",
     events: ["NFL Sunday Ticket", "Oscars Watch Party"],
     tags: ["Classic", "Pub grub"],
@@ -115,7 +115,7 @@ export const bars: Bar[] = [
     location: "New York, NY",
     coordinates: [-73.9950, 40.7280],
     image:
-      "https://images.squarespace-cdn.com/content/v1/61f061a8e8c8555a87925de0/0070fd65-fa1c-4f46-bff6-8cdf1553b3f4/rsr-cream+%281%29.png",
+      "https://images.squarespace-cdn.com/content/v1/61f061a8e8c8555a87925de0/48f1acfd-902e-4c75-8b21-7902a8923b5d/roccos-022625-223.jpg",
     website: "https://www.gotoroccos.com/",
     events: ["NBA All-Star Game", "NFL Sunday Ticket", "World Cup"],
     tags: ["Trendy", "Fan favorite"],
@@ -126,7 +126,7 @@ export const bars: Bar[] = [
     location: "New York, NY",
     coordinates: [-73.9837, 40.7418],
     image:
-      "https://images.getbento.com/s8kP7h64RGak2h4PbJZy_logo-whit.png",
+      "https://images.sideways.nyc/4ezQvvlFsCO0r35xBs0BYK/turnmill-1.jpg",
     website: "https://www.turnmillnyc.com/",
     events: ["Premier League", "Champions League"],
     tags: ["Upscale", "Craft cocktails"],
@@ -159,7 +159,7 @@ export const bars: Bar[] = [
     location: "Boston, MA",
     coordinates: [-71.0968, 42.3471],
     image:
-      "https://images.getbento.com/accounts/5e3610b7be583b3edeaaf7e8624551ab/media/images/55385bb-logo.png",
+      "https://resizer.otstatic.com/v2/photos/xlarge/1/24983945.jpg",
     website: "https://www.bleacherbarboston.com/",
     events: ["MLB Playoffs", "NFL Sunday Ticket", "World Cup"],
     tags: ["Top rated", "Iconic"],
@@ -192,7 +192,7 @@ export const bars: Bar[] = [
     location: "Philadelphia, PA",
     coordinates: [-75.1626, 39.9502],
     image:
-      "https://mcgillins.com/wp-content/uploads/2015/11/mcgillins-logo-large.png",
+      "https://mcgillins.com/wp-content/uploads/2015/09/exterior-ByThomasRobertClarkePhotographyLR.jpg",
     website: "https://mcgillins.com/",
     events: ["World Cup", "NFL Sunday Ticket", "MLB Playoffs"],
     tags: ["Historic", "Classic", "Top rated"],
@@ -214,7 +214,7 @@ export const bars: Bar[] = [
     location: "Washington, DC",
     coordinates: [-77.0097, 38.8755],
     image:
-      "https://tomswatchbar.com/wp-content/uploads/2025/02/Toms-Watch-Bar-logo-white-1-1.png",
+      "https://tomswatchbar.com/wp-content/uploads/2025/02/live-music_500x419.jpg",
     website: "https://tomswatchbar.com/navy-yard/",
     events: ["March Madness", "NBA All-Star Game", "NFL Sunday Ticket"],
     tags: ["Big screens", "Top rated"],
@@ -258,7 +258,7 @@ export const bars: Bar[] = [
     location: "Asbury Park, NJ",
     coordinates: [-74.0100, 40.2163],
     image:
-      "https://asburyalehouse.com/wp-content/uploads/2023/10/aah-logo.png",
+      "https://asburyalehouse.com/wp-content/uploads/2024/02/FA5I0005-scaled-e1708492588346.jpg",
     website: "https://asburyalehouse.com/",
     events: ["NFL Sunday Ticket", "UFC Fight Night", "March Madness"],
     tags: ["Dive bar", "Craft cocktails"],

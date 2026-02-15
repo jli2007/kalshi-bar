@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeftIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
@@ -37,11 +38,13 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         <div className="relative rounded-xl bg-kalshi-card overflow-hidden mb-8">
           <ShineBorder shineColor="#28CC95" borderWidth={1} duration={10} className="z-10 opacity-70" />
 
-          <div className="relative">
-            <img
+          <div className="relative h-64 w-full">
+            <Image
               src={event.image}
               alt={event.name}
-              className="w-full h-64 object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-kalshi-card via-transparent to-transparent" />
             <span className="absolute top-4 left-4 rounded-sm border border-kalshi-green/70 bg-kalshi-card/80 backdrop-blur-sm px-2.5 py-1 text-sm font-medium text-kalshi-green">
@@ -77,11 +80,13 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
               <ShineBorder shineColor="#28CC95" borderWidth={1} duration={10} className="z-10 opacity-50" />
 
               {bar.image ? (
-                <div className="relative">
-                  <img
+                <div className="relative h-32 w-full">
+                  <Image
                     src={bar.image}
                     alt={bar.name}
-                    className="w-full h-32 object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 512px"
+                    className="object-cover"
                   />
                   <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-kalshi-card to-transparent" />
                 </div>

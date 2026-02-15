@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { ShineBorder } from "@/components/ui/ShineBorder"
 import { cn } from "@/lib/utils"
 
@@ -39,8 +40,8 @@ const GoogleIcon = ({ className, ...props }: { className?: string; [key: string]
   </svg>
 )
 
-const YelpIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
-  <img src="/yelp.svg" alt="Yelp" className={className} loading="lazy" {...props} />
+const YelpIcon = ({ className }: { className?: string }) => (
+  <Image src="/yelp.svg" alt="Yelp" className={className} width={20} height={20} sizes="20px" />
 )
 
 const XIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
@@ -129,11 +130,12 @@ export const ReviewCard = ({
       {/* Header */}
       <div className="flex flex-row items-start justify-between tracking-normal">
         <div className="flex items-center space-x-3">
-          <img
+          <Image
             src={review.user.avatar}
             alt={review.user.name}
             height={48}
             width={48}
+            sizes="48px"
             className="border-kalshi-border h-12 w-12 overflow-hidden rounded-full border"
           />
           <div className="flex flex-col gap-0.5">
@@ -152,7 +154,7 @@ export const ReviewCard = ({
         </div>
         <PlatformIcon className={cn(
           "size-5 shrink-0",
-          review.platform === "twitter" && "text-[#8a8f98]"
+          review.platform === "twitter" && "text-kalshi-text-secondary"
         )} />
       </div>
 
@@ -169,11 +171,15 @@ export const ReviewCard = ({
       {/* Optional image */}
       <div className="mt-auto">
         {review.image ? (
-          <img
-            src={review.image}
-            alt="Review media"
-            className="h-48 w-full rounded-xl border border-kalshi-border object-cover"
-          />
+          <div className="relative h-48 w-full overflow-hidden rounded-xl border border-kalshi-border">
+            <Image
+              src={review.image}
+              alt="Review media"
+              fill
+              sizes="(max-width: 768px) 100vw, 512px"
+              className="object-cover"
+            />
+          </div>
         ) : (
           <div className="flex h-48 w-full items-center justify-center rounded-xl border border-dashed border-kalshi-border text-sm text-kalshi-text-secondary">
             Photo coming soon

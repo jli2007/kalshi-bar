@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Suspense } from "react"
 import { enrichTweet, type EnrichedTweet, type TweetProps } from "react-tweet"
 import { getTweet, type Tweet } from "react-tweet/api"
@@ -97,11 +98,12 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
         rel="noreferrer"
         className="shrink-0"
       >
-        <img
+        <Image
           title={`Profile picture of ${tweet.user.name}`}
           alt={tweet.user.screen_name}
           height={48}
           width={48}
+          sizes="48px"
           src={tweet.user.profile_image_url_https}
           className="border-kalshi-border overflow-hidden rounded-full border"
         />
@@ -191,15 +193,19 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
         <div className="relative flex transform-gpu snap-x snap-mandatory gap-4 overflow-x-auto">
           <div className="shrink-0 snap-center sm:w-2" />
           {tweet.photos.map((photo) => (
-            <img
+            <div
               key={photo.url}
-              src={photo.url}
-              width={photo.width}
-              height={photo.height}
-              title={"Photo by " + tweet.user.name}
-              alt={tweet.text}
-              className="h-64 w-5/6 shrink-0 snap-center snap-always rounded-xl border object-cover shadow-sm"
-            />
+              className="relative h-64 w-5/6 shrink-0 snap-center snap-always overflow-hidden rounded-xl border shadow-sm"
+            >
+              <Image
+                src={photo.url}
+                title={"Photo by " + tweet.user.name}
+                alt={tweet.text}
+                fill
+                sizes="(max-width: 768px) 85vw, 512px"
+                className="object-cover"
+              />
+            </div>
           ))}
           <div className="shrink-0 snap-center sm:w-2" />
         </div>
@@ -208,14 +214,18 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
         !tweet.photos &&
         // @ts-expect-error package doesn't have type definitions
         tweet?.card?.binding_values?.thumbnail_image_large?.image_value.url && (
-          <img
-            src={
-              // @ts-expect-error package doesn't have type definitions
-              tweet.card.binding_values.thumbnail_image_large.image_value.url
-            }
-            className="h-64 rounded-xl border object-cover shadow-sm"
-            alt={tweet.text}
-          />
+          <div className="relative h-64 w-full overflow-hidden rounded-xl border shadow-sm">
+            <Image
+              src={
+                // @ts-expect-error package doesn't have type definitions
+                tweet.card.binding_values.thumbnail_image_large.image_value.url
+              }
+              alt={tweet.text}
+              fill
+              sizes="(max-width: 768px) 100vw, 512px"
+              className="object-cover"
+            />
+          </div>
         )}
     </div>
   )
@@ -283,11 +293,12 @@ export const MockTweetCard = ({
       {/* Header */}
       <div className="flex flex-row items-start justify-between tracking-normal">
         <div className="flex items-center space-x-3">
-          <img
+          <Image
             src={tweet.user.avatar}
             alt={tweet.user.name}
             height={48}
             width={48}
+            sizes="48px"
             className="border-kalshi-border h-12 w-12 overflow-hidden rounded-full border"
           />
           <div className="flex flex-col gap-0.5">
@@ -315,11 +326,15 @@ export const MockTweetCard = ({
       {/* Optional image */}
       <div className="mt-auto">
         {tweet.image ? (
-          <img
-            src={tweet.image}
-            alt="Tweet media"
-            className="h-44 w-full rounded-xl border border-kalshi-border object-cover"
-          />
+          <div className="relative h-44 w-full overflow-hidden rounded-xl border border-kalshi-border">
+            <Image
+              src={tweet.image}
+              alt="Tweet media"
+              fill
+              sizes="(max-width: 768px) 100vw, 512px"
+              className="object-cover"
+            />
+          </div>
         ) : (
           <div className="flex h-44 w-full items-center justify-center rounded-xl border border-dashed border-kalshi-border text-sm text-kalshi-text-secondary">
             No media

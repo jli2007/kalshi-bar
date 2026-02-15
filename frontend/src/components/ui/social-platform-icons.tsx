@@ -1,3 +1,4 @@
+import Image from "next/image"
 import type { ComponentType } from "react"
 
 export type SocialPlatform = "google" | "yelp" | "twitter" | "instagram" | "tiktok"
@@ -29,8 +30,8 @@ const GoogleIcon = ({ className, ...props }: { className?: string; [key: string]
   </svg>
 )
 
-const YelpIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
-  <img src="/yelp.svg" alt="Yelp" className={className} loading="lazy" {...props} />
+const YelpIcon = ({ className }: { className?: string }) => (
+  <Image src="/yelp.svg" alt="Yelp" className={className} width={20} height={20} sizes="20px" />
 )
 
 const TwitterIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (

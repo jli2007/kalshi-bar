@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import { MockTweetCard, type MockTweet } from "@/components/ui/tweet-card";
 import { ReviewCard, type MockReview } from "@/components/ui/review-card";
@@ -243,9 +244,12 @@ export default function LearnMorePage() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-3">
                       <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner shadow-black/30">
-                        <img
+                        <Image
                           src={bar.image}
                           alt={bar.name}
+                          width={40}
+                          height={40}
+                          sizes="40px"
                           className="h-10 w-10 rounded-xl object-cover"
                         />
                       </div>
