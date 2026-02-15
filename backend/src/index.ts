@@ -1,37 +1,31 @@
 import 'dotenv/config';
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { weather, database, kalshi } from "./routes";
-import type { Context } from 'hono';
+import { logger } from "hono/logger";
+import { weather, kalshi } from "./routes";
 
 const app = new Hono();
 
-app.use('*', async (c: Context, next) => {
-  if (!c.env.OPENAI_API_KEY) {
-    console.error('❌ OPENAI_API_KEY environment variable is not set');
-    return c.json({ error: 'Server misconfiguration: api key not set' }, 500);
-  }
-  await next();
-});
+// Request logging
+app.use("*", logger());
 
+// CORS
 app.use("/*", cors());
 
+// Routes
 app.route("/weather", weather);
-app.route("/database", database);
 app.route("/kalshi", kalshi);
 
-app.get('/', (c) => c.json({
-  name: 'Kalshi Bars Server',
-  // version: '1.0.0',
-  // endpoints: {
-  //   relations: '/api/relations',
-  //   relationsPricing: '/api/relations/price',
-  //   relationsGraph: '/api/relations/graph',
-  //   relationsGraphPricing: '/api/relations/graph/price',
-  //   relatedBets: '/api/related-bets',
-  //   dependencies: '/api/dependencies',
-  // },
-} as const));
+app.get('/', (c) => {
+  console.log('📍 Health check');
+  return c.json({ name: 'Kalshi Bars Server', status: 'ok' });
+});
+
+console.log('🚀 Starting Kalshi Bars Server on port 3001...');
+console.log('📝 Environment check:');
+console.log(`   OPENAI_API_KEY: ${process.env.OPENAI_API_KEY ? 'Set' : 'Missing'}`);
+console.log(`   KALSHI_API_KEY: ${process.env.KALSHI_API_KEY ? 'Set' : 'Missing'}`);
+console.log(`   WEATHER_API_KEY: ${process.env.WEATHER_API_KEY ? 'Set' : 'Missing'}`);
 
 export default {
   port: 3001,

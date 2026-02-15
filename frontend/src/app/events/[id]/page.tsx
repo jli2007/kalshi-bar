@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Navbar from "@/components/layout/Navbar";
 import { ShineBorder } from "@/components/ui/ShineBorder";
+import MarketsSection from "@/components/MarketsSection";
 import { getEventById, getBarsForEvent } from "@/data/events";
 
 interface EventDetailPageProps {
@@ -58,6 +59,9 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
             </p>
           </div>
         </div>
+
+        {/* Kalshi Markets section */}
+        <MarketsSection eventId={id} eventName={event.name} category={event.category} />
 
         {/* Bars section */}
         <h2 className="text-xl font-bold text-white mb-4">

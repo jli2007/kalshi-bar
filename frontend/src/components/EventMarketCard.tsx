@@ -1,0 +1,370 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { ShineBorder } from "@/components/ui/ShineBorder";
+import type { KalshiMarket } from "./MarketCard";
+
+interface CandlestickPoint {
+  ts: number;
+  price: number;
+}
+
+interface OutcomeData {
+  market: KalshiMarket;
+  candlesticks: CandlestickPoint[];
+  color: string;
+  label: string;
+  logoUrl?: string | null;
+}
+
+interface EventMarketCardProps {
+  eventTitle: string;
+  markets: KalshiMarket[];
+}
+
+const COLORS = ["#28CC95", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6"];
+
+// Map series tickers to search context for better Wikipedia results
+function getContextFromSeries(seriesTicker: string): string {
+  const contextMap: Record<string, string> = {
+    KXUCLGAME: "football club soccer",
+    KXEPLGAME: "football club Premier League",
+    KXNBAGAME: "NBA basketball team",
+    KXNFLGAME: "NFL football team",
+    KXMLBGAME: "MLB baseball team",
+    KXNHLGAME: "NHL hockey team",
+    KXNCAAMGAME: "college basketball team",
+    KXUFCGAME: "UFC MMA fighter",
+    KXWCGAME: "national football team soccer",
+    KXOSCARS: "actor actress film",
+    KXGRAMMYS: "musician singer",
+    KXPRES: "politician",
+    KXBTC: "cryptocurrency",
+    KXETH: "cryptocurrency",
+    KXSOL: "cryptocurrency",
+  };
+  return contextMap[seriesTicker] || "";
+}
+
+function getOutcomeLabel(market: KalshiMarket): string {
+  // Use yes_sub_title if available (this has the proper name)
+  if (market.yes_sub_title) {
+    return market.yes_sub_title;
+  }
+
+  // Extract outcome from ticker (e.g., KXUCLGAME-26FEB25PSGASM-PSG -> PSG)
+  const parts = market.ticker.split("-");
+  const outcome = parts[parts.length - 1];
+
+  if (outcome === "TIE" || outcome === "DRAW") return "Draw";
+
+  return outcome;
+}
+
+export default function EventMarketCard({
+  eventTitle,
+  markets,
+}: EventMarketCardProps) {
+  const [outcomes, setOutcomes] = useState<OutcomeData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Calculate total volume
+  const totalVolume = markets.reduce((sum, m) => sum + (m.volume || 0), 0);
+
+  useEffect(() => {
+    async function fetchAllData() {
+      setLoading(true);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+      // Build outcome data with labels first
+      const outcomesData: OutcomeData[] = markets.map((market, index) => ({
+        market,
+        candlesticks: [],
+        color: COLORS[index % COLORS.length],
+        label: getOutcomeLabel(market),
+        logoUrl: null,
+      }));
+
+      // Fetch logos in parallel (single batch request with context)
+      const labels = outcomesData.map((o) => o.label).filter((l) => l !== "Draw" && l !== "Tie");
+      const seriesTicker = markets[0]?.series_ticker || "";
+      const context = getContextFromSeries(seriesTicker);
+
+      if (labels.length > 0) {
+        try {
+          const logoRes = await fetch(`${apiUrl}/kalshi/logos`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ queries: labels, context }),
+          });
+          if (logoRes.ok) {
+            const logoData = await logoRes.json();
+            const logos: Record<string, string | null> = logoData.logos || {};
+            outcomesData.forEach((o) => {
+              if (logos[o.label]) {
+                o.logoUrl = logos[o.label];
+              }
+            });
+          }
+        } catch (err) {
+          console.error("Failed to fetch logos:", err);
+        }
+      }
+
+      // Fetch candlesticks sequentially with delay to avoid rate limiting
+      for (let index = 0; index < markets.length; index++) {
+        const market = markets[index];
+
+        if (market.series_ticker && market.ticker) {
+          try {
+            // Add delay between requests (except first)
+            if (index > 0) {
+              await new Promise((resolve) => setTimeout(resolve, 300));
+            }
+
+            const res = await fetch(
+              `${apiUrl}/kalshi/candlesticks/${market.series_ticker}/${market.ticker}?hours=168&interval=60`
+            );
+            if (res.ok) {
+              const data = await res.json();
+              outcomesData[index].candlesticks = data.candlesticks || [];
+            }
+          } catch (err) {
+            console.error("Failed to fetch candlesticks:", err);
+          }
+        }
+      }
+
+      setOutcomes(outcomesData);
+      setLoading(false);
+    }
+
+    fetchAllData();
+  }, [markets]);
+
+  return (
+    <div className="relative rounded-xl bg-kalshi-card overflow-hidden">
+      <ShineBorder shineColor="#28CC95" borderWidth={1} duration={12} className="z-10 opacity-60" />
+
+      <div className="p-6">
+        {/* Header */}
+        <h3 className="text-xl font-semibold text-white mb-6">{eventTitle}</h3>
+
+        {/* Two column layout */}
+        <div className="flex gap-8">
+          {/* Left: Market outcomes */}
+          <div className="flex-1">
+            {/* Header row */}
+            <div className="flex items-center text-xs text-kalshi-text-secondary mb-3">
+              <span className="flex-1">Market</span>
+              <span className="w-20 text-center">Pays out</span>
+              <span className="w-20 text-center">Odds</span>
+            </div>
+
+            {/* Outcome rows */}
+            {outcomes.map((outcome, index) => {
+              const price = outcome.market.yes_bid || outcome.market.last_price || 50;
+              const payout = price > 0 ? (100 / price).toFixed(2) : "—";
+
+              return (
+                <div key={outcome.market.ticker} className="flex items-center mb-3">
+                  <div className="flex-1 flex items-center gap-3">
+                    {outcome.logoUrl ? (
+                      <img
+                        src={outcome.logoUrl}
+                        alt={outcome.label}
+                        className="w-8 h-8 rounded-full object-cover bg-white/10"
+                      />
+                    ) : (
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium"
+                        style={{ backgroundColor: `${outcome.color}20`, color: outcome.color }}
+                      >
+                        {outcome.label.charAt(0)}
+                      </div>
+                    )}
+                    <span className="text-white text-sm">{outcome.label}</span>
+                  </div>
+                  <span className="w-20 text-center text-kalshi-text-secondary text-sm">{payout}x</span>
+                  <div className="w-20 flex justify-center">
+                    <span
+                      className="px-3 py-1.5 rounded-md border text-sm font-medium"
+                      style={{
+                        borderColor: `${outcome.color}50`,
+                        backgroundColor: `${outcome.color}10`,
+                        color: outcome.color,
+                      }}
+                    >
+                      {price}%
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Volume */}
+            <p className="text-sm text-kalshi-text-secondary mt-4">
+              ${(totalVolume / 100).toLocaleString()} vol
+            </p>
+          </div>
+
+          {/* Right: Multi-line chart */}
+          <div className="w-80">
+            {/* Legend */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-4 flex-wrap">
+                {outcomes.slice(0, 3).map((outcome) => {
+                  const price = outcome.market.yes_bid || outcome.market.last_price || 50;
+                  return (
+                    <span key={outcome.market.ticker} className="flex items-center gap-1.5 text-xs">
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: outcome.color }}
+                      />
+                      <span className="text-kalshi-text-secondary">{outcome.label}</span>
+                      <span className="text-white font-medium">{price}%</span>
+                    </span>
+                  );
+                })}
+              </div>
+              <span className="text-kalshi-green font-semibold text-sm">Kalshi</span>
+            </div>
+
+            {/* Chart */}
+            <div className="h-40">
+              <MultiLineChart outcomes={outcomes} loading={loading} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MultiLineChart({ outcomes, loading }: { outcomes: OutcomeData[]; loading: boolean }) {
+  if (loading) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <div className="w-full h-full bg-white/5 rounded animate-pulse" />
+      </div>
+    );
+  }
+
+  // Collect all candlesticks with data
+  const outcomesWithData = outcomes.filter((o) => o.candlesticks.length >= 2);
+
+  if (outcomesWithData.length === 0) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-full h-20 flex items-end justify-center gap-1 opacity-30">
+            {[30, 45, 35, 50, 40, 55, 45, 60, 50, 45, 55, 40].map((h, i) => (
+              <div key={i} className="w-1.5 bg-kalshi-green/50 rounded-t" style={{ height: `${h}%` }} />
+            ))}
+          </div>
+          <p className="text-xs text-kalshi-text-secondary mt-2">Chart loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Find global min/max across all outcomes
+  const allPrices = outcomesWithData.flatMap((o) => o.candlesticks.map((c) => c.price));
+  const minPrice = Math.min(...allPrices);
+  const maxPrice = Math.max(...allPrices);
+  const range = maxPrice - minPrice || 10;
+  const padding = range * 0.1;
+
+  // Find global time range
+  const allTimes = outcomesWithData.flatMap((o) => o.candlesticks.map((c) => c.ts));
+  const minTime = Math.min(...allTimes);
+  const maxTime = Math.max(...allTimes);
+  const timeRange = maxTime - minTime || 1;
+
+  return (
+    <div className="h-full w-full relative">
+      {/* Y-axis labels */}
+      <div className="absolute right-0 top-0 bottom-4 flex flex-col justify-between text-[10px] text-kalshi-text-secondary w-10 text-right">
+        <span>100%</span>
+        <span>75%</span>
+        <span>50%</span>
+        <span>25%</span>
+        <span>0%</span>
+      </div>
+
+      {/* Chart area */}
+      <div className="absolute inset-0 pr-12 pb-4">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+          {/* Grid lines */}
+          {[0, 25, 50, 75, 100].map((y) => (
+            <line
+              key={y}
+              x1="0"
+              y1={y}
+              x2="100"
+              y2={y}
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="0.5"
+              strokeDasharray="2,2"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+
+          {/* Lines for each outcome */}
+          {outcomesWithData.map((outcome) => {
+            const points = outcome.candlesticks
+              .map((c) => {
+                const x = ((c.ts - minTime) / timeRange) * 100;
+                const y = 100 - c.price; // Price is already 0-100
+                return `${x},${y}`;
+              })
+              .join(" ");
+
+            const lastPoint = outcome.candlesticks[outcome.candlesticks.length - 1];
+            const lastY = 100 - lastPoint.price;
+
+            return (
+              <g key={outcome.market.ticker}>
+                <polyline
+                  fill="none"
+                  stroke={outcome.color}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  points={points}
+                  vectorEffect="non-scaling-stroke"
+                />
+                {/* End dot */}
+                <circle
+                  cx="100"
+                  cy={lastY}
+                  r="4"
+                  fill={outcome.color}
+                  vectorEffect="non-scaling-stroke"
+                />
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* X-axis dates */}
+      <div className="absolute bottom-0 left-0 right-12 flex justify-between text-[10px] text-kalshi-text-secondary">
+        {(() => {
+          const dates: string[] = [];
+          const start = new Date(minTime * 1000);
+          const end = new Date(maxTime * 1000);
+          const dayMs = 24 * 60 * 60 * 1000;
+          const totalDays = Math.ceil((end.getTime() - start.getTime()) / dayMs);
+          const step = Math.max(1, Math.floor(totalDays / 4));
+
+          for (let i = 0; i <= 4; i++) {
+            const d = new Date(start.getTime() + i * step * dayMs);
+            dates.push(d.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+          }
+          return dates.map((d, i) => <span key={i}>{d}</span>);
+        })()}
+      </div>
+    </div>
+  );
+}
