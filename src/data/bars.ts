@@ -6,29 +6,11 @@ export interface Bar {
   zip: string;
   coordinates: [number, number]; // [lng, lat]
   website?: string;
+  image: string;
   events: string[];
 }
 
 export const bars: Bar[] = [
-  {
-    name: "Sluggers Bar",
-    address: "3540 N Clark St",
-    city: "Chicago",
-    state: "IL",
-    zip: "60657",
-    coordinates: [-87.6562, 41.9484],
-    website: "https://www.sluggersbar.com",
-    events: ["Champions League", "NBA Finals"],
-  },
-  {
-    name: "Brickyard Craft Kitchen & Bar",
-    address: "23 Park Pl",
-    city: "New York",
-    state: "NY",
-    zip: "10007",
-    coordinates: [-74.0082, 40.7133],
-    events: ["Oscars Watch Party", "NFL Sunday Ticket"],
-  },
   {
     name: "Finnerty's",
     address: "18 W 33rd St",
@@ -36,6 +18,8 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10001",
     coordinates: [-73.9876, 40.7484],
+    image:
+      "https://images.squarespace-cdn.com/content/v1/6686f05807c6546ad9722019/0ca76781-1ff7-4531-b98b-a06b8752cde5/Finns_Op1.jpg",
     events: ["Champions League", "March Madness"],
   },
   {
@@ -45,6 +29,8 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10451",
     coordinates: [-73.9262, 40.8296],
+    image:
+      "https://stanssportsbar.com/wp-content/uploads/2022/04/Stans-Logo-Darker-2.png",
     events: ["Yankees Watch Party", "NBA Finals"],
   },
   {
@@ -54,6 +40,8 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10009",
     coordinates: [-73.9838, 40.7252],
+    image:
+      "https://static.wixstatic.com/media/bd42b5_0200e2aa79f941abaebe75bb7dbec197~mv2.png",
     events: ["Premier League", "UFC Fight Night"],
   },
   {
@@ -63,16 +51,9 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10038",
     coordinates: [-74.0063, 40.7085],
+    image:
+      "https://images.getbento.com/accounts/b6bbbbf288efff1f22635abb9e9f66ce/media/images/541946986logo.png",
     events: ["NFL Sunday Ticket", "March Madness", "Oscars Watch Party"],
-  },
-  {
-    name: "The Quarter Club",
-    address: "312 Grand St",
-    city: "Brooklyn",
-    state: "NY",
-    zip: "11211",
-    coordinates: [-73.9565, 40.7134],
-    events: ["NBA Finals", "World Cup"],
   },
   {
     name: "Harlem Tavern",
@@ -81,61 +62,9 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10026",
     coordinates: [-73.9558, 40.8027],
+    image:
+      "https://res.cloudinary.com/spothopper/image/fetch/f_auto,q_auto:best,c_fit,h_1200/http://static.spotapps.co/spots/5a/148a1be4654f4d8d6b2d8a3a10a067/:original",
     events: ["NFL Sunday Ticket", "Champions League"],
-  },
-  {
-    name: "Mudville 9",
-    address: "126 Chambers St",
-    city: "New York",
-    state: "NY",
-    zip: "10007",
-    coordinates: [-74.0082, 40.7153],
-    events: ["Yankees Watch Party", "March Madness", "UFC Fight Night"],
-  },
-  {
-    name: "Roebling Sporting Club",
-    address: "225 N 8th St",
-    city: "Brooklyn",
-    state: "NY",
-    zip: "11211",
-    coordinates: [-73.9575, 40.7178],
-    events: ["World Cup", "Premier League", "Champions League"],
-  },
-  {
-    name: "Standings",
-    address: "43 E 7th St",
-    city: "New York",
-    state: "NY",
-    zip: "10003",
-    coordinates: [-73.9888, 40.7282],
-    events: ["MLB Playoffs", "NFL Sunday Ticket"],
-  },
-  {
-    name: "Blondies",
-    address: "212 W 79th St",
-    city: "New York",
-    state: "NY",
-    zip: "10024",
-    coordinates: [-73.9793, 40.7828],
-    events: ["March Madness", "NBA Finals", "NFL Sunday Ticket"],
-  },
-  {
-    name: "Legends",
-    address: "6 W 33rd St",
-    city: "New York",
-    state: "NY",
-    zip: "10001",
-    coordinates: [-73.9858, 40.7487],
-    events: ["UFC Fight Night", "NBA Finals"],
-  },
-  {
-    name: "Smithfield Hall",
-    address: "138 W 25th St",
-    city: "New York",
-    state: "NY",
-    zip: "10001",
-    coordinates: [-73.9932, 40.7441],
-    events: ["Premier League", "Champions League", "World Cup"],
   },
   {
     name: "The Irish American",
@@ -144,52 +73,9 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10038",
     coordinates: [-74.0063, 40.7088],
+    image:
+      "https://images.squarespace-cdn.com/content/v1/663bdcf068c65c071caa1820/76fd80e6-0a1d-4002-9ad0-3dee4e3f7d08/IRISH_AMERICAN_LOGO_Y.png",
     events: ["NFL Sunday Ticket", "Oscars Watch Party"],
-  },
-  {
-    name: "The Supply House",
-    address: "1647 2nd Ave",
-    city: "New York",
-    state: "NY",
-    zip: "10028",
-    coordinates: [-73.9536, 40.7779],
-    events: ["Yankees Watch Party", "March Madness"],
-  },
-  {
-    name: "Overlook",
-    address: "225 E 44th St",
-    city: "New York",
-    state: "NY",
-    zip: "10017",
-    coordinates: [-73.9728, 40.7522],
-    events: ["NBA Finals", "UFC Fight Night", "NFL Sunday Ticket"],
-  },
-  {
-    name: "Keg & Lantern Brewing Company",
-    address: "97 Nassau Ave",
-    city: "Brooklyn",
-    state: "NY",
-    zip: "11222",
-    coordinates: [-73.9442, 40.7237],
-    events: ["World Cup", "Premier League"],
-  },
-  {
-    name: "Break Bar & Billiards",
-    address: "32-04 Broadway",
-    city: "Queens",
-    state: "NY",
-    zip: "11106",
-    coordinates: [-73.9235, 40.7623],
-    events: ["UFC Fight Night", "March Madness", "NBA Finals"],
-  },
-  {
-    name: "The Seneca",
-    address: "582 Seneca Ave",
-    city: "Queens",
-    state: "NY",
-    zip: "11385",
-    coordinates: [-73.9032, 40.7047],
-    events: ["Mets Watch Party", "NFL Sunday Ticket"],
   },
   {
     name: "Blue Haven",
@@ -198,6 +84,8 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10012",
     coordinates: [-74.0003, 40.7275],
+    image:
+      "https://static.spotapps.co/web/bluehavennyc--com/custom/video_poster.jpg",
     events: ["Champions League", "March Madness", "Oscars Watch Party"],
   },
   {
@@ -207,6 +95,8 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10012",
     coordinates: [-73.9991, 40.7307],
+    image:
+      "https://images.squarespace-cdn.com/content/v1/61f061a8e8c8555a87925de0/0070fd65-fa1c-4f46-bff6-8cdf1553b3f4/rsr-cream+%281%29.png",
     events: ["NBA Finals", "NFL Sunday Ticket", "World Cup"],
   },
   {
@@ -216,33 +106,8 @@ export const bars: Bar[] = [
     state: "NY",
     zip: "10016",
     coordinates: [-73.9837, 40.7418],
-    events: ["Premier League", "Champions League"],
-  },
-  {
-    name: "The Three Monkeys",
-    address: "236 W 54th St",
-    city: "New York",
-    state: "NY",
-    zip: "10019",
-    coordinates: [-73.9833, 40.7636],
-    events: ["UFC Fight Night", "Oscars Watch Party", "NFL Sunday Ticket"],
-  },
-  {
-    name: "Tom's Watch Bar",
-    address: "1011 S Figueroa St",
-    city: "Los Angeles",
-    state: "CA",
-    zip: "90015",
-    coordinates: [-118.2673, 34.0430],
-    events: ["Lakers Watch Party", "World Cup", "March Madness"],
-  },
-  {
-    name: "The Fox and Hounds",
-    address: "11100 Ventura Blvd",
-    city: "Studio City",
-    state: "CA",
-    zip: "91604",
-    coordinates: [-118.3843, 34.1425],
+    image:
+      "https://images.getbento.com/s8kP7h64RGak2h4PbJZy_logo-whit.png",
     events: ["Premier League", "Champions League"],
   },
   {
@@ -252,16 +117,9 @@ export const bars: Bar[] = [
     state: "CA",
     zip: "90303",
     coordinates: [-118.3282, 33.9461],
+    image:
+      "https://cp1.inkrefuge.com/admin/asset/uploads/551/on_page_element/cb-logo.png",
     events: ["NFL Sunday Ticket", "NBA Finals", "UFC Fight Night"],
-  },
-  {
-    name: "Graystone Tavern",
-    address: "3441 N Sheffield Ave",
-    city: "Chicago",
-    state: "IL",
-    zip: "60657",
-    coordinates: [-87.6536, 41.9462],
-    events: ["Cubs Watch Party", "March Madness", "NFL Sunday Ticket"],
   },
   {
     name: "Fatpour Tap Works",
@@ -270,6 +128,8 @@ export const bars: Bar[] = [
     state: "IL",
     zip: "60622",
     coordinates: [-87.6829, 41.9030],
+    image:
+      "https://fatpourtapworks.com/wp-content/uploads/sites/8/2024/12/wicker-724x452.jpeg",
     events: ["Bears Watch Party", "NBA Finals", "March Madness"],
   },
   {
@@ -279,6 +139,8 @@ export const bars: Bar[] = [
     state: "IL",
     zip: "60654",
     coordinates: [-87.6298, 41.8901],
+    image:
+      "https://www.theorychicago.com/wp-content/uploads/2021/09/chicago-sports-lounge.png",
     events: ["UFC Fight Night", "Champions League", "Oscars Watch Party"],
   },
 ];
