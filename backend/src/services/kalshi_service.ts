@@ -443,17 +443,14 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
       period_interval: periodInterval.toString(),
     });
 
-    const url = `${KALSHI_API_BASE}${path}?${params}`;
-    console.log(`   📡 Fetching candlesticks: ${url}`);
-
     try {
-      const response = await fetch(url, {
-        headers: this.getHeaders("GET", path),
-      });
+      const response = await this.fetchWithFallback(path, params);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`   ❌ HTTP ${response.status}:`, errorText.substring(0, 200));
+      if (!response || !response.ok) {
+        if (response) {
+          const errorText = await response.text();
+          console.error(`   ❌ HTTP ${response.status}:`, errorText.substring(0, 200));
+        }
         return [];
       }
 
