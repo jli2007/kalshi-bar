@@ -11,7 +11,7 @@ export interface Bar {
 
 export const bars: Bar[] = [
   {
-    name: "Brickyard Craft Kitchen & Bar",
+    name: "Brickyard Craft kitchen & Bar",
     address: "23 Park Pl",
     location: "New York, NY",
     coordinates: [-74.0082, 40.7133],
@@ -19,7 +19,7 @@ export const bars: Bar[] = [
       "https://static.spotapps.co/website_images/ab_websites/117295_website/video_poster.jpg",
     website: "https://brickyardbarnyc.com/",
     events: ["Oscars Watch Party", "NFL Sunday Ticket"],
-    tags: ["Craft Kitchen", "Top Rated"],
+    tags: ["Craft kitchen", "Top rated"],
   },
   {
     name: "Finnerty's",
@@ -30,7 +30,7 @@ export const bars: Bar[] = [
       "https://images.squarespace-cdn.com/content/v1/6686f05807c6546ad9722019/0ca76781-1ff7-4531-b98b-a06b8752cde5/Finns_Op1.jpg",
     website: "https://www.finnertysnyc.com/",
     events: ["Champions League", "March Madness"],
-    tags: ["Trendy", "Fan Favorite"],
+    tags: ["Trendy", "Fan favorite"],
   },
   {
     name: "Stan's Sports Bar",
@@ -52,7 +52,7 @@ export const bars: Bar[] = [
       "https://static.wixstatic.com/media/bd42b5_0200e2aa79f941abaebe75bb7dbec197~mv2.png",
     website: "https://www.hairylemonnyc.com/",
     events: ["Premier League", "UFC Fight Night"],
-    tags: ["Dive Bar", "Late Night"],
+    tags: ["Dive bar", "Late night"],
   },
   {
     name: "Stout",
@@ -63,7 +63,7 @@ export const bars: Bar[] = [
       "https://images.getbento.com/accounts/b6bbbbf288efff1f22635abb9e9f66ce/media/images/541946986logo.png",
     website: "https://www.stoutnyc.com/",
     events: ["NFL Sunday Ticket", "March Madness", "Oscars Watch Party"],
-    tags: ["Top Rated", "Big Screens"],
+    tags: ["Top rated", "Big screens"],
   },
   {
     name: "Harlem Tavern",
@@ -74,7 +74,7 @@ export const bars: Bar[] = [
       "https://res.cloudinary.com/spothopper/image/fetch/f_auto,q_auto:best,c_fit,h_1200/http://static.spotapps.co/spots/5a/148a1be4654f4d8d6b2d8a3a10a067/:original",
     website: "https://harlemtavern.com/",
     events: ["NFL Sunday Ticket", "Champions League"],
-    tags: ["Outdoor Patio", "Trendy"],
+    tags: ["Outdoor patio", "Trendy"],
   },
   {
     name: "The Irish American",
@@ -85,7 +85,7 @@ export const bars: Bar[] = [
       "https://images.squarespace-cdn.com/content/v1/663bdcf068c65c071caa1820/76fd80e6-0a1d-4002-9ad0-3dee4e3f7d08/IRISH_AMERICAN_LOGO_Y.png",
     website: "https://www.irishamericanpubnyc.com/",
     events: ["NFL Sunday Ticket", "Oscars Watch Party"],
-    tags: ["Classic", "Pub Grub"],
+    tags: ["Classic", "Pub grub"],
   },
   {
     name: "Blue Haven",
@@ -96,7 +96,7 @@ export const bars: Bar[] = [
       "https://static.spotapps.co/web/bluehavennyc--com/custom/video_poster.jpg",
     website: "https://bluehavennyc.com/",
     events: ["Champions League", "March Madness", "Oscars Watch Party"],
-    tags: ["Trendy", "Craft Cocktails"],
+    tags: ["Trendy", "Craft cocktails"],
   },
   {
     name: "Rocco's Sport & Recreation",
@@ -107,7 +107,7 @@ export const bars: Bar[] = [
       "https://images.squarespace-cdn.com/content/v1/61f061a8e8c8555a87925de0/0070fd65-fa1c-4f46-bff6-8cdf1553b3f4/rsr-cream+%281%29.png",
     website: "https://www.gotoroccos.com/",
     events: ["NBA Finals", "NFL Sunday Ticket", "World Cup"],
-    tags: ["Trendy", "Fan Favorite"],
+    tags: ["Trendy", "Fan favorite"],
   },
   {
     name: "Turnmill Bar",
@@ -118,7 +118,7 @@ export const bars: Bar[] = [
       "https://images.getbento.com/s8kP7h64RGak2h4PbJZy_logo-whit.png",
     website: "https://www.turnmillnyc.com/",
     events: ["Premier League", "Champions League"],
-    tags: ["Upscale", "Craft Cocktails"],
+    tags: ["Upscale", "Craft cocktails"],
   },
   {
     name: "The Banshee",
@@ -129,7 +129,7 @@ export const bars: Bar[] = [
       "https://www.bansheeboston.com/wp-content/uploads/2025/11/Banshee-Chelsea-v-Liverpool-e1763066339392.jpg",
     website: "https://www.bansheeboston.com/",
     events: ["Premier League", "Champions League", "World Cup"],
-    tags: ["Fan Favorite", "Late Night"],
+    tags: ["Fan favorite", "Late night"],
   },
   {
     name: "Cask 'n Flagon",
@@ -140,7 +140,7 @@ export const bars: Bar[] = [
       "https://casknflagon.com/wp-content/uploads/2024/03/Cask-N-Flagon-Shamrock-Showdown-3-16-24-5.jpeg",
     website: "https://casknflagon.com/",
     events: ["NFL Sunday Ticket", "MLB Playoffs", "March Madness"],
-    tags: ["Legendary", "Big Screens"],
+    tags: ["Legendary", "Big screens"],
   },
   {
     name: "Bleacher Bar",
@@ -151,7 +151,7 @@ export const bars: Bar[] = [
       "https://images.getbento.com/accounts/5e3610b7be583b3edeaaf7e8624551ab/media/images/55385bb-logo.png",
     website: "https://www.bleacherbarboston.com/",
     events: ["MLB Playoffs", "NFL Sunday Ticket", "World Cup"],
-    tags: ["Top Rated", "Iconic"],
+    tags: ["Top rated", "Iconic"],
   },
   {
     name: "Tony C's Sports Bar & Grill",
@@ -162,7 +162,7 @@ export const bars: Bar[] = [
       "https://www.tonycssportsbar.com/wp-content/uploads/2024/08/DSC03355-scaled-e1765322120731.jpg",
     website: "https://www.tonycssportsbar.com/",
     events: ["NBA Finals", "NFL Sunday Ticket", "March Madness"],
-    tags: ["Big Screens", "Pub Grub"],
+    tags: ["Big screens", "Pub grub"],
   },
   {
     name: "Chickie's & Pete's",
@@ -173,7 +173,7 @@ export const bars: Bar[] = [
       "https://cdn.sanity.io/images/78e278ym/production/cae8aed6abf549b2f822a216ad2955485266f123-1980x1080.jpg",
     website: "https://www.chickiesandpetes.com/",
     events: ["NFL Sunday Ticket", "MLB Playoffs", "NBA Finals"],
-    tags: ["Legendary", "Fan Favorite"],
+    tags: ["Legendary", "Fan favorite"],
   },
   {
     name: "McGillin's Olde Ale House",
@@ -195,7 +195,7 @@ export const bars: Bar[] = [
       "https://misconducttavern.com/wp-content/uploads/2019/04/misconduct-logo.png",
     website: "https://misconducttavern.com/",
     events: ["Premier League", "Champions League", "NFL Sunday Ticket"],
-    tags: ["Trendy", "Late Night"],
+    tags: ["Trendy", "Late night"],
   },
   {
     name: "Tom's Watch Bar",
@@ -206,7 +206,7 @@ export const bars: Bar[] = [
       "https://tomswatchbar.com/wp-content/uploads/2025/02/Toms-Watch-Bar-logo-white-1-1.png",
     website: "https://tomswatchbar.com/navy-yard/",
     events: ["March Madness", "NBA Finals", "NFL Sunday Ticket"],
-    tags: ["Big Screens", "Top Rated"],
+    tags: ["Big screens", "Top rated"],
   },
   {
     name: "Exiles Bar",
@@ -217,7 +217,7 @@ export const bars: Bar[] = [
       "https://images.squarespace-cdn.com/content/v1/5db731dc71de2b13a3655655/1572464586176-84XZ3S1EI4635FG3UD5D/exiles-logo.png",
     website: "https://www.exilesbar.com/",
     events: ["Premier League", "Champions League", "World Cup"],
-    tags: ["Fan Favorite", "Dive Bar"],
+    tags: ["Fan favorite", "Dive bar"],
   },
   {
     name: "Over Under",
@@ -250,7 +250,7 @@ export const bars: Bar[] = [
       "https://asburyalehouse.com/wp-content/uploads/2023/10/aah-logo.png",
     website: "https://asburyalehouse.com/",
     events: ["NFL Sunday Ticket", "UFC Fight Night", "March Madness"],
-    tags: ["Dive Bar", "Craft Cocktails"],
+    tags: ["Dive bar", "Craft cocktails"],
   },
   {
     name: "The Trinity Bar",
@@ -261,6 +261,6 @@ export const bars: Bar[] = [
       "https://res.cloudinary.com/gonation/w_1800/q_auto/f_auto/gonation.data.dev/pgrc5qlio3dmx5pquxyl",
     website: "https://www.thetrinitybar.com/",
     events: ["Premier League", "Champions League", "UFC Fight Night"],
-    tags: ["Top Rated", "Late Night"],
+    tags: ["Top rated", "Late night"],
   },
 ];

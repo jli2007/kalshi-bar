@@ -26,4 +26,5 @@
 body {
   background: var(--color-kalshi-bg);
   color: #ffffff;
+  font-weight: 500;
 }
