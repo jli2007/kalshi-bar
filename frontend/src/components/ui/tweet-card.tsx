@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { enrichTweet, type EnrichedTweet, type TweetProps } from "react-tweet"
 import { getTweet, type Tweet } from "react-tweet/api"
 
+import { ShineBorder } from "@/components/ui/ShineBorder"
 import { SOCIAL_PLATFORM_CONFIG, type SocialPlatform } from "@/components/ui/social-platform-icons"
 import { cn } from "@/lib/utils"
 
@@ -278,6 +279,7 @@ export const MockTweetCard = ({
         className
       )}
     >
+      <ShineBorder shineColor="#28CC95" borderWidth={1} duration={18} className="opacity-60" />
       {/* Header */}
       <div className="flex flex-row items-start justify-between tracking-normal">
         <div className="flex items-center space-x-3">

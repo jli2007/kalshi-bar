@@ -1,3 +1,4 @@
+import { ShineBorder } from "@/components/ui/ShineBorder"
 import { cn } from "@/lib/utils"
 
 export type ReviewPlatform = "google" | "yelp" | "twitter" | "instagram" | "tiktok"
@@ -124,6 +125,7 @@ export const ReviewCard = ({
         className
       )}
     >
+      <ShineBorder shineColor="#28CC95" borderWidth={1} duration={18} className="opacity-60" />
       {/* Header */}
       <div className="flex flex-row items-start justify-between tracking-normal">
         <div className="flex items-center space-x-3">

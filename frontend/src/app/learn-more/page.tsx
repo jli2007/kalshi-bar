@@ -65,6 +65,18 @@ const mediaLibrary = {
   tonycs: getBar("Tony C's Sports Bar & Grill", 0).image,
 };
 
+const reviewMedia = {
+  brickyardBooth: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80",
+  sluggersHappy: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80",
+  tonycsSpread: "https://images.unsplash.com/photo-1525610553991-2bede1a236e2?auto=format&fit=crop&w=1200&q=80",
+  harlemPatio: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80",
+  bluehavenBrunch: "https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=1200&q=80",
+  caskFenway: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=80",
+  chickiesFries: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80",
+  bansheeCrowd: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1200&q=80",
+  overtimeCheers: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80",
+};
+
 const barTweets: MockTweet[] = [
   {
     user: createUser(featuredBars.stout),
@@ -113,7 +125,7 @@ const customerReviews: MockReview[] = [
     platform: "google",
     rating: 5,
     text: "The Brickyard staff treated our watch party like family. Perfect pours, sound dialed in, and they even saved us a booth.",
-    image: mediaLibrary.brickyard,
+    image: reviewMedia.brickyardBooth,
   },
   {
     user: {
@@ -123,7 +135,7 @@ const customerReviews: MockReview[] = [
     platform: "google",
     rating: 4,
     text: "Sluggers’ happy hour is undefeated. $6 drafts, batting cages in the back, and every MLB game on.",
-    image: mediaLibrary.sluggers,
+    image: reviewMedia.sluggersHappy,
   },
   {
     user: {
@@ -133,7 +145,7 @@ const customerReviews: MockReview[] = [
     platform: "google",
     rating: 5,
     text: "Tony C’s set us up with a private booth for the playoffs. Huge screens and the wings were elite.",
-    image: mediaLibrary.tonycs,
+    image: reviewMedia.tonycsSpread,
   },
   {
     user: {
@@ -143,7 +155,7 @@ const customerReviews: MockReview[] = [
     platform: "google",
     rating: 5,
     text: "Harlem Tavern patio heaters saved us during the Sunday Ticket slate. Service never slowed down.",
-    image: mediaLibrary.harlem,
+    image: reviewMedia.harlemPatio,
   },
   {
     user: {
@@ -153,7 +165,7 @@ const customerReviews: MockReview[] = [
     platform: "yelp",
     rating: 5,
     text: "Blue Haven’s brunch cocktails + Premier League replays is my new Sunday ritual. Zero bad seats.",
-    image: mediaLibrary.bluehaven,
+    image: reviewMedia.bluehavenBrunch,
   },
   {
     user: {
@@ -163,7 +175,7 @@ const customerReviews: MockReview[] = [
     platform: "yelp",
     rating: 4,
     text: "Cask ’n Flagon still feels like Fenway. Packed, loud, and the staff kept the rounds coming.",
-    image: mediaLibrary.cask,
+    image: reviewMedia.caskFenway,
   },
   {
     user: {
@@ -173,7 +185,7 @@ const customerReviews: MockReview[] = [
     platform: "yelp",
     rating: 5,
     text: "Chickie’s & Pete’s made us feel like we were at the stadium. Crabfries + playoff crowd = perfection.",
-    image: mediaLibrary.chickies,
+    image: reviewMedia.chickiesFries,
   },
   {
     user: {
@@ -183,7 +195,7 @@ const customerReviews: MockReview[] = [
     },
     platform: "twitter",
     text: "The Banshee’s Guinness pour is elite. Champions League nights there feel like being in Dublin. ☘️",
-    image: mediaLibrary.banshee,
+    image: reviewMedia.bansheeCrowd,
   },
   {
     user: {
@@ -193,7 +205,7 @@ const customerReviews: MockReview[] = [
     },
     platform: "twitter",
     text: "Blue Haven staying open late for overtime meant we didn’t miss a single play. Bartenders remembered everyone.",
-    image: mediaLibrary.bluehaven,
+    image: reviewMedia.overtimeCheers,
   },
 ];
 
@@ -225,13 +237,12 @@ export default function LearnMorePage() {
             {barScanCards.map(({ bar, message }) => (
               <article
                 key={bar.name}
-                className="relative overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(120%_140%_at_0%_0%,#1f242d_0%,#14181f_55%,#0a0c0f_100%)] p-6 before:absolute before:left-0 before:top-1/2 before:h-12 before:w-12 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-kalshi-bg before:content-[''] after:absolute after:right-0 after:top-1/2 after:h-12 after:w-12 after:translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-kalshi-bg after:content-['']"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[url('/dark-texture.jpg')] bg-cover bg-center p-6 shadow-[0_25px_60px_rgba(0,0,0,0.65)]"
               >
-                <div className="pointer-events-none absolute -right-20 -top-16 h-40 w-40 rounded-full bg-kalshi-green/10 blur-3xl" />
-                <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
+                <div className="grid gap-8 md:grid-cols-[1.3fr_auto] md:items-center">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                      <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner shadow-black/30">
                         <img
                           src={bar.image}
                           alt={bar.name}
@@ -248,24 +259,24 @@ export default function LearnMorePage() {
                         </p>
                       </div>
                     </div>
-                    <p className="text-sm leading-relaxed text-white/85">{message}</p>
+                    <p className="text-sm leading-relaxed text-white/90">{message}</p>
                     <div className="flex flex-wrap gap-2">
                       {bar.tags.slice(0, 2).map((tag) => (
                         <span
                           key={`${bar.name}-${tag}`}
-                          className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80"
+                          className="rounded-full border border-white/5 bg-white/5 px-3 py-1 text-xs text-white/80 backdrop-blur-sm"
                         >
                           {tag}
                         </span>
                       ))}
-                      <span className="rounded-full border border-kalshi-green/40 bg-kalshi-green/10 px-3 py-1 text-xs text-kalshi-green">
+                      <span className="rounded-full border border-[#28CC95]/40 bg-[#28CC95]/10 px-3 py-1 text-xs font-medium text-[#28CC95]">
                         {bar.events[0]}
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="w-full max-w-xs rounded-2xl bg-[#f7f4ed] p-4 text-center shadow-[0_0_0_1px_rgba(255,255,255,0.12)]">
-                      <div className="mx-auto w-fit rounded-xl bg-white p-3">
+                  <div className="flex justify-center">
+                    <div className="w-full max-w-[15rem] rounded-[28px] bg-gradient-to-br from-white via-[#E6FFF4] to-white p-5 text-center shadow-[0_15px_45px_rgba(0,8,5,0.25)]">
+                      <div className="mx-auto w-fit rounded-2xl border border-black/5 bg-white p-3 shadow-inner">
                         <QRCodeSVG
                           value={bar.website}
                           size={128}
@@ -273,17 +284,18 @@ export default function LearnMorePage() {
                           fgColor="#0a0c0f"
                         />
                       </div>
-                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#0a0c0f]">
+                      <p className="mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-[#003221]/70">
                         Scan to visit
                       </p>
-                      <p className="mt-1 text-xs text-[#2d2f34]">
+                      <p className="mt-1 text-xs font-medium text-[#003221]">
                         {formatWebsite(bar.website)}
                       </p>
+                      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-transparent via-[#003221]/40 to-transparent" />
                       <a
                         href={bar.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-3 inline-flex items-center justify-center rounded-full border border-[#0a0c0f]/20 px-3 py-1 text-xs font-semibold text-[#0a0c0f] transition hover:border-[#0a0c0f]/40"
+                        className="mt-4 inline-flex items-center justify-center rounded-full border border-[#28CC95]/40 bg-[#28CC95] px-4 py-1.5 text-xs font-semibold text-[#003221] transition hover:brightness-110"
                       >
                         Open website
                       </a>

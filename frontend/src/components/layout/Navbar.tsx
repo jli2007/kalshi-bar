@@ -97,7 +97,9 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
                 className={`text-sm font-medium transition-colors ${
                   pathname === link.href
                     ? "text-kalshi-green"
-                    : "text-kalshi-text-secondary hover:text-white"
+                    : pathname.startsWith("/events") && link.href === "/events"
+                      ? "text-kalshi-green"
+                      : "text-kalshi-text-secondary hover:text-white"
                 }`}
               >
                 {link.label}
