@@ -25,7 +25,7 @@ export const bars: Bar[] = [
     name: "Sluggers World Class Sports Bar",
     address: "3540 N Clark St",
     location: "Chicago, IL",
-    coordinates: [-87.6559, 41.9484],
+    coordinates: [-87.6561, 41.9466],
     image:
       "https://dottie.enjoyillinois.com/assets/Tourism-Operators/images/itims/24039_Slugs_Front_Web__FocusFillWyIwLjAwIiwiMC4wMCIsMjAwMCw5NTBd.jpg",
     website: "https://www.sluggersbar.com/",
@@ -47,7 +47,7 @@ export const bars: Bar[] = [
     name: "Stan's Sports Bar",
     address: "836 River Ave",
     location: "Bronx, NY",
-    coordinates: [-73.9262, 40.8296],
+    coordinates: [-73.9264, 40.8268],
     image:
       "https://stanssportsbar.com/wp-content/uploads/2022/04/Stans-Logo-Darker-2.png",
     website: "https://stanssportsbar.com/",
@@ -58,7 +58,7 @@ export const bars: Bar[] = [
     name: "The Hairy Lemon",
     address: "28 Avenue B",
     location: "New York, NY",
-    coordinates: [-73.9838, 40.7252],
+    coordinates: [-73.9833, 40.7224],
     image:
       "https://static.wixstatic.com/media/bd42b5_0200e2aa79f941abaebe75bb7dbec197~mv2.png",
     website: "https://www.hairylemonnyc.com/",
@@ -80,7 +80,7 @@ export const bars: Bar[] = [
     name: "Harlem Tavern",
     address: "2153 Frederick Douglass Blvd",
     location: "New York, NY",
-    coordinates: [-73.9558, 40.8027],
+    coordinates: [-73.9555, 40.8047],
     image:
       "https://res.cloudinary.com/spothopper/image/fetch/f_auto,q_auto:best,c_fit,h_1200/http://static.spotapps.co/spots/5a/148a1be4654f4d8d6b2d8a3a10a067/:original",
     website: "https://harlemtavern.com/",
@@ -91,7 +91,7 @@ export const bars: Bar[] = [
     name: "The Irish American",
     address: "17 John St",
     location: "New York, NY",
-    coordinates: [-74.0063, 40.7088],
+    coordinates: [-74.0087, 40.7099],
     image:
       "https://images.squarespace-cdn.com/content/v1/663bdcf068c65c071caa1820/76fd80e6-0a1d-4002-9ad0-3dee4e3f7d08/IRISH_AMERICAN_LOGO_Y.png",
     website: "https://www.irishamericanpubnyc.com/",
@@ -113,7 +113,7 @@ export const bars: Bar[] = [
     name: "Rocco's Sport & Recreation",
     address: "1 W 3rd St",
     location: "New York, NY",
-    coordinates: [-73.9991, 40.7307],
+    coordinates: [-73.9950, 40.7280],
     image:
       "https://images.squarespace-cdn.com/content/v1/61f061a8e8c8555a87925de0/0070fd65-fa1c-4f46-bff6-8cdf1553b3f4/rsr-cream+%281%29.png",
     website: "https://www.gotoroccos.com/",
@@ -168,7 +168,7 @@ export const bars: Bar[] = [
     name: "Tony C's Sports Bar & Grill",
     address: "250 Northern Ave",
     location: "Boston, MA",
-    coordinates: [-71.0422, 42.3480],
+    coordinates: [-71.0382, 42.3488],
     image:
       "https://www.tonycssportsbar.com/wp-content/uploads/2024/08/DSC03355-scaled-e1765322120731.jpg",
     website: "https://www.tonycssportsbar.com/",
@@ -190,7 +190,7 @@ export const bars: Bar[] = [
     name: "McGillin's Olde Ale House",
     address: "1310 Drury St",
     location: "Philadelphia, PA",
-    coordinates: [-75.1613, 39.9520],
+    coordinates: [-75.1626, 39.9502],
     image:
       "https://mcgillins.com/wp-content/uploads/2015/11/mcgillins-logo-large.png",
     website: "https://mcgillins.com/",
@@ -210,9 +210,9 @@ export const bars: Bar[] = [
   },
   {
     name: "Tom's Watch Bar",
-    address: "1300 1st St SE",
+    address: "1250 Half St SE",
     location: "Washington, DC",
-    coordinates: [-77.0075, 38.8753],
+    coordinates: [-77.0097, 38.8755],
     image:
       "https://tomswatchbar.com/wp-content/uploads/2025/02/Toms-Watch-Bar-logo-white-1-1.png",
     website: "https://tomswatchbar.com/navy-yard/",
@@ -232,9 +232,9 @@ export const bars: Bar[] = [
   },
   {
     name: "Over Under",
-    address: "1004 Mount Vernon Pl NW",
+    address: "476 K St NW",
     location: "Washington, DC",
-    coordinates: [-77.0241, 38.9054],
+    coordinates: [-77.0187, 38.9023],
     image:
       "https://img1.wsimg.com/isteam/ip/2fb10d8a-1684-4050-9f69-1ffbeb786456/Over-Under-Sportsbook-Rooftop-Lounge-008_20025.jpg",
     website: "https://overunderdc.com/",
@@ -256,7 +256,7 @@ export const bars: Bar[] = [
     name: "Asbury Ale House",
     address: "531 Cookman Ave",
     location: "Asbury Park, NJ",
-    coordinates: [-74.0001, 40.2205],
+    coordinates: [-74.0100, 40.2163],
     image:
       "https://asburyalehouse.com/wp-content/uploads/2023/10/aah-logo.png",
     website: "https://asburyalehouse.com/",
@@ -267,7 +267,7 @@ export const bars: Bar[] = [
     name: "The Trinity Bar",
     address: "157 Orange St",
     location: "New Haven, CT",
-    coordinates: [-72.9279, 41.3083],
+    coordinates: [-72.9236, 41.3060],
     image:
       "https://res.cloudinary.com/gonation/w_1800/q_auto/f_auto/gonation.data.dev/pgrc5qlio3dmx5pquxyl",
     website: "https://www.thetrinitybar.com/",

@@ -20,6 +20,7 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   const pathname = usePathname();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
   const blurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const results =
@@ -37,16 +38,21 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
 
   useEffect(() => {
     setOpen(results.length > 0);
-  }, [results.length]);
+    setHighlightIndex(-1);
+  }, [results.length, query]);
 
   const handleSelect = (bar: Bar) => {
     onSelectBar?.(bar);
     setQuery("");
     setOpen(false);
+    setHighlightIndex(-1);
   };
 
   const handleBlur = () => {
-    blurTimeout.current = setTimeout(() => setOpen(false), 150);
+    blurTimeout.current = setTimeout(() => {
+      setOpen(false);
+      setHighlightIndex(-1);
+    }, 150);
   };
 
   const handleFocus = () => {
@@ -57,7 +63,21 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setOpen(false);
+      setHighlightIndex(-1);
       (e.target as HTMLInputElement).blur();
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev < results.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev > 0 ? prev - 1 : results.length - 1
+      );
+    } else if (e.key === "Enter" && highlightIndex >= 0 && results[highlightIndex]) {
+      e.preventDefault();
+      handleSelect(results[highlightIndex]);
     }
   };
 
@@ -92,7 +112,7 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
             <input
               type="text"
-              placeholder="Search bars"
+              placeholder="Search for bars..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={handleFocus}
@@ -114,11 +134,14 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
 
             {open && results.length > 0 && (
               <div className="absolute left-0 top-full mt-1 w-full overflow-hidden rounded-lg border border-kalshi-border bg-kalshi-card shadow-lg">
-                {results.map((bar) => (
+                {results.map((bar, i) => (
                   <button
                     key={bar.name}
                     onMouseDown={() => handleSelect(bar)}
-                    className="flex w-full flex-col px-3 py-2 text-left transition-colors hover:bg-white/5"
+                    onMouseEnter={() => setHighlightIndex(i)}
+                    className={`flex w-full flex-col px-3 py-2 text-left transition-colors ${
+                      i === highlightIndex ? "bg-white/10" : "hover:bg-white/5"
+                    }`}
                   >
                     <span className="text-sm font-medium text-white">{bar.name}</span>
                     <span className="text-xs text-kalshi-text-secondary">{bar.location}</span>

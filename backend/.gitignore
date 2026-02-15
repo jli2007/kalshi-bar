@@ -1,6 +1,4 @@
+.env*
+!.env.example
+*.pem
 node_modules
-.env
-*.log
-dist
-.DS_Store
-kalshi_private_key.pem

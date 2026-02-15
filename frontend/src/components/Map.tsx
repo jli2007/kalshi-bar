@@ -77,17 +77,10 @@ export default function Map({ selectedBar, onClose }: MapProps) {
     };
   }, []);
 
-  // Fly to selected bar and highlight its building
+  // Fly to selected bar and drop a marker
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-
-    const removeHighlight = () => {
-      if (map.getLayer("building-highlight")) map.removeLayer("building-highlight");
-      if (map.getSource("building-highlight")) map.removeSource("building-highlight");
-    };
-
-    removeHighlight();
 
     if (!selectedBar) return;
 
@@ -100,66 +93,20 @@ export default function Map({ selectedBar, onClose }: MapProps) {
       essential: true,
     });
 
-    const findBuilding = () => {
-      const point = map.project(selectedBar.coordinates);
-      const bbox: [mapboxgl.PointLike, mapboxgl.PointLike] = [
-        [point.x - 20, point.y - 20],
-        [point.x + 20, point.y + 20],
-      ];
-      const features = map.queryRenderedFeatures(bbox);
-      return features.find(
-        (f) =>
-          (f.sourceLayer === "building" ||
-            f.layer?.id?.toLowerCase().includes("building") ||
-            f.layer?.type === "fill-extrusion") &&
-          (f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon")
-      );
-    };
+    const el = document.createElement("div");
+    el.innerHTML = `<svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 0C8.059 0 0 8.059 0 18c0 13.5 18 30 18 30s18-16.5 18-30C36 8.059 27.941 0 18 0z" fill="#28CC95"/>
+      <circle cx="18" cy="18" r="8" fill="#0A0C0F"/>
+    </svg>`;
+    el.style.cursor = "pointer";
+    el.style.filter = "drop-shadow(0 2px 8px rgba(40, 204, 149, 0.6))";
 
-    const applyHighlight = (building: mapboxgl.GeoJSONFeature) => {
-      removeHighlight();
-      map.addSource("building-highlight", {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          geometry: building.geometry,
-          properties: building.properties,
-        } as GeoJSON.Feature,
-      });
-      map.addLayer({
-        id: "building-highlight",
-        type: "fill-extrusion",
-        source: "building-highlight",
-        paint: {
-          "fill-extrusion-color": "#28CC95",
-          "fill-extrusion-opacity": 0.7,
-          "fill-extrusion-height": (building.properties?.height as number) ?? 20,
-          "fill-extrusion-base": (building.properties?.min_height as number) ?? 0,
-        },
-      });
-    };
-
-    let retryTimer: ReturnType<typeof setTimeout>;
-
-    const highlightBuilding = () => {
-      removeHighlight();
-      const building = findBuilding();
-      if (building) {
-        applyHighlight(building);
-      } else {
-        // Tiles may still be loading — retry once after a short delay
-        retryTimer = setTimeout(() => {
-          const b = findBuilding();
-          if (b) applyHighlight(b);
-        }, 500);
-      }
-    };
-
-    map.once("idle", highlightBuilding);
+    const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
+      .setLngLat(selectedBar.coordinates)
+      .addTo(map);
 
     return () => {
-      map.off("idle", highlightBuilding);
-      clearTimeout(retryTimer);
+      marker.remove();
     };
   }, [selectedBar]);
 
