@@ -1,12 +1,13 @@
 import Navbar from "@/components/layout/Navbar";
+import Map from "@/components/Map";
 
 export default function Home() {
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        {/* Your content here */}
+      <main className="flex-1">
+        <Map />
       </main>
-    </>
+    </div>
   );
 }
