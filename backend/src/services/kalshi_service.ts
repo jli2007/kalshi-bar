@@ -8,6 +8,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+
 export class KalshiService {
   private apiKey: string;
   private privateKey: crypto.KeyObject;
@@ -108,25 +109,37 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
       const result = response.choices[0]?.message?.content?.trim() || "NONE";
       console.log(`   🤖 OpenAI response: ${result}`);
 
-      if (result === "NONE" || !result.startsWith("KX")) {
+      if (result === "NONE") {
         console.log(`   ⚠️ No matching series found`);
         return null;
       }
 
-      return result;
+      const match = result.match(/KX[A-Z0-9]+/);
+      if (!match) {
+        console.log(`   ⚠️ No matching series found`);
+        return null;
+      }
+
+      return match[0];
     } catch (error: any) {
       console.error(`   ❌ OpenAI API error:`, error.message);
       return null;
     }
   }
 
-  async getMarketsBySeries(seriesTicker: string, limit: number = 20): Promise<KalshiMarket[]> {
+  async getMarketsBySeries(
+    seriesTicker: string,
+    options: { limit?: number; status?: string } = {}
+  ): Promise<KalshiMarket[]> {
     const path = `/trade-api/v2/markets`;
+    const limit = options.limit ?? 20;
     const params = new URLSearchParams({
       series_ticker: seriesTicker,
       limit: limit.toString(),
-      status: "open",
     });
+    if (options.status) {
+      params.set("status", options.status);
+    }
 
     const url = `${KALSHI_API_BASE}${path}?${params}`;
     console.log(`   📡 Fetching markets: ${url}`);

@@ -30,12 +30,12 @@ export const events: Event[] = [
     image: "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
   },
   {
-    id: "nba",
-    name: "NBA",
+    id: "nba-all-star",
+    name: "NBA All-Star Game",
     category: "Basketball",
-    date: "June 5, 2025",
+    date: "Feb 15, 2025",
     time: "9:00 PM EST",
-    description: "The culmination of the NBA season. Watch the best teams battle for the championship.",
+    description: "NBA All-Star Game featuring the league's biggest stars in an exhibition showdown.",
     image: "https://images.unsplash.com/photo-1563506644863-444710df1e03?w=800",
   },
   {

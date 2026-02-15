@@ -1,68 +1,29 @@
 import Navbar from "@/components/layout/Navbar";
-import { MockTweetCard, type MockTweet } from "@/components/ui/tweet-card";
 import { ReviewCard, type MockReview } from "@/components/ui/review-card";
 import { bars } from "@/data/bars";
+import { QRCodeSVG } from "qrcode.react";
 
-// Get bars that have images for their tweets
+// Get bars that have images for their QR cards
 const barsWithImages = bars.filter((bar) => bar.image);
 
-// Generate bar tweets from actual bar data
-const barTweets: MockTweet[] = [
-  {
-    user: {
-      name: barsWithImages[0].name,
-      handle: barsWithImages[0].name.toLowerCase().replace(/[^a-z0-9]/g, ""),
-      avatar: barsWithImages[0].image,
-      verified: true,
-    },
-    text: `${barsWithImages[0].events[0]} watch party this weekend! Best screens in ${barsWithImages[0].location}. Doors open at 4pm 🍻`,
-  },
-  {
-    user: {
-      name: barsWithImages[1].name,
-      handle: barsWithImages[1].name.toLowerCase().replace(/[^a-z0-9]/g, ""),
-      avatar: barsWithImages[1].image,
-      verified: true,
-    },
-    text: `Happy hour specials all week. $6 drafts and half-price apps until 7pm 🍺`,
-  },
-  {
-    user: {
-      name: barsWithImages[2].name,
-      handle: barsWithImages[2].name.toLowerCase().replace(/[^a-z0-9]/g, ""),
-      avatar: barsWithImages[2].image,
-      verified: true,
-    },
-    text: `Big game this Saturday! Reserve your table now before we're packed 📺`,
-  },
-  {
-    user: {
-      name: barsWithImages[3].name,
-      handle: barsWithImages[3].name.toLowerCase().replace(/[^a-z0-9]/g, ""),
-      avatar: barsWithImages[3].image,
-      verified: true,
-    },
-    text: `New craft cocktails on the menu. Come try our signature Old Fashioned 🥃`,
-  },
-  {
-    user: {
-      name: barsWithImages[4].name,
-      handle: barsWithImages[4].name.toLowerCase().replace(/[^a-z0-9]/g, ""),
-      avatar: barsWithImages[4].image,
-      verified: true,
-    },
-    text: `Live music every Friday night. No cover charge, just good vibes 🎸`,
-  },
-  {
-    user: {
-      name: barsWithImages[5].name,
-      handle: barsWithImages[5].name.toLowerCase().replace(/[^a-z0-9]/g, ""),
-      avatar: barsWithImages[5].image,
-      verified: true,
-    },
-    text: `${barsWithImages[5].events[0]} is coming up! We've got the best atmosphere in town ⚽`,
-  },
+const barScanCopy = [
+  "Oscars watch party this weekend. Best screens in the city with early seating and pitchers on deck.",
+  "Happy hour all week with $6 drafts and half-price apps. Bring the crew and claim a booth.",
+  "Big game Saturday. Reserve your table now before the front room fills up.",
+  "New craft cocktails on the menu, led by a signature Old Fashioned with smoke and spice.",
+  "Live music every Friday night with no cover charge, just good vibes.",
+  "NFL Sunday Ticket is coming up. Wide screens, loud crowd, and a full tap list.",
+  "Outdoor patio is open early for Champions League mornings and late-night replays.",
+  "Classic pub energy with hearty plates and enough TVs to keep every table locked in.",
 ];
+
+const barScanCards = barsWithImages.slice(0, 8).map((bar, index) => ({
+  bar,
+  message: barScanCopy[index] ?? `${bar.events[0]} is on deck. Scan to reserve your spot.`,
+}));
+
+const formatWebsite = (url: string) =>
+  url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
 // Reviews FROM customers (people visiting bars) - mixed platforms
 const customerReviews: MockReview[] = [
@@ -138,12 +99,90 @@ export default function LearnMorePage() {
           See what bars and customers are saying
         </p>
 
-        {/* Bar Tweets Section */}
+        {/* Bar Scan Section */}
         <section className="mt-10">
-          <h2 className="text-xl font-semibold text-white mb-4">Recent Bar Tweets</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
-            {barTweets.map((tweet) => (
-              <MockTweetCard key={tweet.user.handle} tweet={tweet} className="h-full" />
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Scan The Lineup</h2>
+              <p className="text-sm text-kalshi-text-secondary">
+                Tap or scan a QR code to jump straight to the bar&apos;s website.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-kalshi-text-secondary">
+              <span className="h-2 w-2 rounded-full bg-kalshi-green" />
+              Live bar links
+            </div>
+          </div>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {barScanCards.map(({ bar, message }) => (
+              <article
+                key={bar.name}
+                className="relative overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(120%_140%_at_0%_0%,#1f242d_0%,#14181f_55%,#0a0c0f_100%)] p-6 before:absolute before:left-0 before:top-1/2 before:h-12 before:w-12 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-kalshi-bg before:content-[''] after:absolute after:right-0 after:top-1/2 after:h-12 after:w-12 after:translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-kalshi-bg after:content-['']"
+              >
+                <div className="pointer-events-none absolute -right-20 -top-16 h-40 w-40 rounded-full bg-kalshi-green/10 blur-3xl" />
+                <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                        <img
+                          src={bar.image}
+                          alt={bar.name}
+                          className="h-10 w-10 rounded-xl object-cover"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.2em] text-kalshi-text-secondary">
+                          Featured Bar
+                        </p>
+                        <h3 className="text-lg font-semibold text-white">{bar.name}</h3>
+                        <p className="text-sm text-kalshi-text-secondary">
+                          {bar.address}, {bar.location}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm leading-relaxed text-white/85">{message}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {bar.tags.slice(0, 2).map((tag) => (
+                        <span
+                          key={`${bar.name}-${tag}`}
+                          className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      <span className="rounded-full border border-kalshi-green/40 bg-kalshi-green/10 px-3 py-1 text-xs text-kalshi-green">
+                        {bar.events[0]}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="w-full max-w-xs rounded-2xl bg-[#f7f4ed] p-4 text-center shadow-[0_0_0_1px_rgba(255,255,255,0.12)]">
+                      <div className="mx-auto w-fit rounded-xl bg-white p-3">
+                        <QRCodeSVG
+                          value={bar.website}
+                          size={128}
+                          bgColor="transparent"
+                          fgColor="#0a0c0f"
+                        />
+                      </div>
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#0a0c0f]">
+                        Scan to visit
+                      </p>
+                      <p className="mt-1 text-xs text-[#2d2f34]">
+                        {formatWebsite(bar.website)}
+                      </p>
+                      <a
+                        href={bar.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-flex items-center justify-center rounded-full border border-[#0a0c0f]/20 px-3 py-1 text-xs font-semibold text-[#0a0c0f] transition hover:border-[#0a0c0f]/40"
+                      >
+                        Open website
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
         </section>

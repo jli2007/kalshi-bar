@@ -1,9 +1,27 @@
 import { Hono } from "hono";
 import { KalshiService } from "../services/kalshi_service";
 import { logoService } from "../services/logo_service";
+import { EVENT_SERIES_MAP, type KalshiMarket } from "../types";
 
 const kalshi = new Hono();
 const kalshiService = new KalshiService();
+
+const normalizeKey = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const getSeriesFromMap = (eventId?: string, eventName?: string): string | null => {
+  const candidates = [eventId, eventName].filter(Boolean) as string[];
+  for (const candidate of candidates) {
+    const normalized = normalizeKey(candidate);
+    if (EVENT_SERIES_MAP[normalized]) {
+      return EVENT_SERIES_MAP[normalized];
+    }
+  }
+  return null;
+};
 
 // Get markets for an event (by event ID/slug)
 kalshi.get("/markets/:eventId", async (c) => {
@@ -20,19 +38,45 @@ kalshi.get("/markets/:eventId", async (c) => {
   }
 
   try {
+    const mappedSeries = getSeriesFromMap(eventId, eventName);
+    if (mappedSeries) {
+      console.log(`   Using mapped series: ${mappedSeries}`);
+    }
+
     // Build search context from slug, name, and category
     const searchContext = [eventId, eventName, category].filter(Boolean).join(" ");
-    console.log(`   🔍 Detecting series for: ${searchContext}`);
-    const seriesTicker = await kalshiService.getSeriesForEventId(searchContext);
-    console.log(`   📌 Series ticker: ${seriesTicker || 'None found'}`);
+    console.log(`   Detecting series for: ${searchContext}`);
+
+    let seriesTicker: string | null = mappedSeries || null;
+    let markets: KalshiMarket[] = [];
+
+    if (seriesTicker) {
+      console.log(`   Fetching markets for series: ${seriesTicker}`);
+      markets = await kalshiService.getMarketsBySeries(seriesTicker, { status: "open" });
+      console.log(`   Found ${markets.length} markets`);
+    }
+
+    if (!seriesTicker || markets.length === 0) {
+      const detectedSeries = await kalshiService.getSeriesForEventId(searchContext);
+      if (detectedSeries) {
+        seriesTicker = detectedSeries;
+        console.log(`   Fetching markets for series: ${seriesTicker}`);
+        markets = await kalshiService.getMarketsBySeries(seriesTicker, { status: "open" });
+        console.log(`   Found ${markets.length} markets`);
+      }
+    }
+
+    if (seriesTicker && markets.length === 0) {
+      console.log(`   No open markets found. Retrying without status filter.`);
+      markets = await kalshiService.getMarketsBySeries(seriesTicker);
+      console.log(`   Found ${markets.length} markets`);
+    }
+
+    console.log(`   Series ticker: ${seriesTicker || 'None found'}`);
 
     if (!seriesTicker) {
       return c.json({ eventId, seriesTicker: null, markets: [], count: 0 });
     }
-
-    console.log(`   📡 Fetching markets for series: ${seriesTicker}`);
-    const markets = await kalshiService.getMarketsBySeries(seriesTicker);
-    console.log(`   ✅ Found ${markets.length} markets`);
 
     return c.json({
       eventId,
