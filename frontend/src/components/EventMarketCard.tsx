@@ -346,12 +346,6 @@ function MultiLineChart({
   const minTime = Math.min(...allTimes);
   const maxTime = Math.max(...allTimes);
   const timeRange = maxTime - minTime || 1;
-  const textureId = `chartTexture-${
-    outcomesWithData[0]?.market.ticker
-      ? outcomesWithData[0].market.ticker.replace(/[^a-zA-Z0-9]/g, "")
-      : "base"
-  }`;
-
   return (
     <div className="h-full w-full relative">
       <div className="absolute right-0 top-0 bottom-4 flex flex-col justify-between text-[10px] text-kalshi-text-secondary w-10 text-right">
@@ -369,18 +363,6 @@ function MultiLineChart({
           className="w-full h-full"
         >
           <defs>
-            <pattern
-              id={textureId}
-              patternUnits="userSpaceOnUse"
-              width="4"
-              height="4"
-            >
-              <path
-                d="M0 4 L4 0"
-                stroke="rgba(255,255,255,0.04)"
-                strokeWidth="0.5"
-              />
-            </pattern>
             {outcomesWithData.map((outcome) => {
               const gradientId = `lineGradient-${outcome.market.ticker.replace(/[^a-zA-Z0-9]/g, "")}`;
               return (
@@ -391,15 +373,6 @@ function MultiLineChart({
               );
             })}
           </defs>
-
-          <rect
-            x="0"
-            y="0"
-            width="100"
-            height="100"
-            fill={`url(#${textureId})`}
-            opacity="0.5"
-          />
 
           {[0, 25, 50, 75, 100].map((y) => (
             <line
@@ -435,7 +408,7 @@ function MultiLineChart({
                 <path
                   d={areaPath}
                   fill={`url(#${gradientId})`}
-                  opacity="0.9"
+                  opacity="0.3"
                 />
                 <polyline
                   fill="none"
@@ -446,18 +419,20 @@ function MultiLineChart({
                   points={points}
                   vectorEffect="non-scaling-stroke"
                 />
-                {coords.map((coord, index) => (
-                  <circle
-                    key={`${outcome.market.ticker}-point-${index}`}
-                    cx={coord.x}
-                    cy={coord.y}
-                    r="1.5"
-                    fill="#0f172a"
-                    stroke={outcome.color}
-                    strokeWidth="0.8"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                ))}
+                {(() => {
+                  const step = Math.max(1, Math.floor(coords.length / 8));
+                  return coords.filter((_, i) => i % step === 0 || i === coords.length - 1).map((coord, idx) => (
+                    <circle
+                      key={`${outcome.market.ticker}-pt-${idx}`}
+                      cx={coord.x}
+                      cy={coord.y}
+                      r="1.5"
+                      fill={outcome.color}
+                      opacity="0.7"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ));
+                })()}
               </g>
             );
           })}

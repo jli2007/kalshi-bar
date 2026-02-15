@@ -7,7 +7,7 @@ import Link from "next/link";
 import { bars, type Bar } from "@/data/bars";
 
 const navLinks = [
-  { label: "Bars", href: "/" },
+  { label: "Bars", href: "/bars" },
   { label: "Events", href: "/events" },
   { label: "Learn more", href: "/learn-more" },
 ];
@@ -96,11 +96,11 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
-                  pathname === link.href
+                  pathname === link.href ||
+                  (pathname.startsWith("/events") && link.href === "/events") ||
+                  (pathname === "/bars" && link.href === "/bars")
                     ? "text-kalshi-green"
-                    : pathname.startsWith("/events") && link.href === "/events"
-                      ? "text-kalshi-green"
-                      : "text-kalshi-text-secondary hover:text-white"
+                    : "text-kalshi-text-secondary hover:text-white"
                 }`}
               >
                 {link.label}
@@ -235,11 +235,11 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    pathname === link.href
+                    pathname === link.href ||
+                    (pathname.startsWith("/events") && link.href === "/events") ||
+                    (pathname === "/bars" && link.href === "/bars")
                       ? "bg-kalshi-green/10 text-kalshi-green"
-                      : pathname.startsWith("/events") && link.href === "/events"
-                        ? "bg-kalshi-green/10 text-kalshi-green"
-                        : "text-kalshi-text-secondary hover:bg-white/5 hover:text-white"
+                      : "text-kalshi-text-secondary hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   {link.label}
