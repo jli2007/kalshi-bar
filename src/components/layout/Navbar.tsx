@@ -1,9 +1,10 @@
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 const navLinks = [
-  { label: "MARKETS", href: "#" },
-  { label: "LIVE", href: "#", isLive: true },
-  { label: "SOCIAL", href: "#" },
+  { label: "BARS", href: "/" },
+  { label: "EVENTS", href: "/events", isLive: true },
+  { label: "LEARN MORE", href: "/learn-more" },
 ];
 
 export default function Navbar() {
@@ -12,12 +13,12 @@ export default function Navbar() {
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         {/* Left: Logo + Nav Links */}
         <div className="flex items-center gap-8">
-          <a href="/" className="text-xl font-bold tracking-tight text-white">
+          <Link href="/" className="text-xl font-bold tracking-tight text-white">
             Kalshi
-          </a>
+          </Link>
           <div className="hidden items-center gap-6 md:flex">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
@@ -27,7 +28,7 @@ export default function Navbar() {
                 }`}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
