@@ -105,6 +105,7 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
   }
 
   if (error) {
+    console.error('MarketsSection error:', error);
     return null;
   }
 
