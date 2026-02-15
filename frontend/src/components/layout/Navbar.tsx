@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { MagnifyingGlassIcon, Cross2Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { bars, type Bar } from "@/data/bars";
@@ -18,6 +18,7 @@ interface NavbarProps {
 
 export default function Navbar({ onSelectBar }: NavbarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(-1);
@@ -43,7 +44,10 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   }, [results.length, query]);
 
   const handleSelect = (bar: Bar) => {
-    onSelectBar?.(bar);
+    // Navigate to bars page with selected bar
+    router.push(`/bars?bar=${encodeURIComponent(bar.name)}`);
+
+    // Clear search state
     setQuery("");
     setOpen(false);
     setHighlightIndex(-1);
@@ -87,7 +91,7 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
       <div className="flex h-14 items-center justify-between px-4">
         {/* Left: Logo + Nav Links */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-xl font-bold tracking-tight text-kalshi-green">
+          <Link href="/" className="text-base font-bold tracking-tight text-kalshi-green md:text-xl">
             Kalshi
           </Link>
           <div className="hidden items-center gap-6 md:flex">

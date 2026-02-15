@@ -28,7 +28,7 @@ export default function Map({ selectedBar, onClose, onSelectBar, visibleBars }: 
       container: containerRef.current,
       style: "mapbox://styles/mapbox/standard",
       center: [-74.0082, 40.7133],
-      zoom: 11,
+      zoom: 12,
       pitch: 55,
       bearing: -17.6,
       scrollZoom: true,
@@ -113,10 +113,10 @@ export default function Map({ selectedBar, onClose, onSelectBar, visibleBars }: 
   return (
     <div ref={containerRef} className="relative h-full w-full">
       {selectedBar && (
-        <div className="absolute left-4 top-4 z-10 w-80 rounded-xl bg-kalshi-bg/90 backdrop-blur-md">
+        <div className="absolute left-2 top-2 z-10 w-44 rounded-lg bg-kalshi-bg/90 backdrop-blur-md md:left-4 md:top-4 md:w-80 md:rounded-xl">
           <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />
           {selectedBar.image && (
-            <div className="relative h-32 overflow-hidden rounded-t-xl">
+            <div className="relative h-16 overflow-hidden rounded-t-lg md:h-32 md:rounded-t-xl">
               <Image
                 src={selectedBar.image}
                 alt={selectedBar.name}
@@ -124,38 +124,38 @@ export default function Map({ selectedBar, onClose, onSelectBar, visibleBars }: 
                 sizes="320px"
                 className="object-cover"
               />
-              <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-kalshi-bg/90 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-6 bg-linear-to-t from-kalshi-bg/90 to-transparent md:h-8" />
             </div>
           )}
-          <div className="p-4">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-base font-semibold text-white">{selectedBar.name}</h3>
-              <div className="flex items-center gap-2">
+          <div className="p-1.5 md:p-4">
+            <div className="flex items-start justify-between gap-1">
+              <h3 className="text-[11px] font-semibold leading-tight text-white md:text-base">{selectedBar.name}</h3>
+              <div className="flex items-center gap-1 md:gap-1.5">
                 <a
                   href={selectedBar.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-0.5 shrink-0 text-kalshi-green transition-opacity hover:opacity-70"
+                  className="shrink-0 text-kalshi-green transition-opacity hover:opacity-70"
                 >
-                  <ExternalLinkIcon className="h-4 w-4" />
+                  <ExternalLinkIcon className="h-3 w-3 md:h-4 md:w-4" />
                 </a>
                 <button
                   onClick={onClose}
-                  className="mt-0.5 shrink-0 text-kalshi-text-secondary transition-colors hover:text-white"
+                  className="shrink-0 text-kalshi-text-secondary transition-colors hover:text-white"
                 >
-                  <Cross2Icon className="h-4 w-4" />
+                  <Cross2Icon className="h-3 w-3 md:h-4 md:w-4" />
                 </button>
               </div>
             </div>
-            <p className="mt-1 text-sm text-kalshi-text-secondary">
+            <p className="mt-0.5 text-[9px] text-kalshi-text-secondary md:mt-1 md:text-sm">
               {selectedBar.address}, {selectedBar.location}
             </p>
             {selectedBar.events.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-1 flex flex-wrap gap-0.5 md:mt-2 md:gap-1.5">
                 {selectedBar.events.map((event) => (
                   <span
                     key={event}
-                    className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-kalshi-text-secondary"
+                    className="rounded-full bg-white/10 px-1 py-px text-[8px] text-kalshi-text-secondary md:px-2 md:py-0.5 md:text-xs"
                   >
                     {event}
                   </span>

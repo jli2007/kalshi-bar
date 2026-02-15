@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function BarCard({ bar, onClick }: { bar: Bar; onClick?: () => void }) {
   return (
     <div
-      className="relative cursor-pointer rounded-xl bg-kalshi-card transition-colors hover:bg-kalshi-card/80"
+      className="relative h-full cursor-pointer rounded-xl bg-kalshi-card transition-colors hover:bg-kalshi-card/80"
       onClick={onClick}
     >
       <ShineBorder shineColor="#28CC95" borderWidth={1} duration={30} className="z-10 opacity-70" />

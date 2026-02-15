@@ -6,6 +6,9 @@ import Navbar from "@/components/layout/Navbar";
 import Map from "@/components/Map";
 import { bars, type Bar } from "@/data/bars";
 
+// Force dynamic rendering for useSearchParams
+export const dynamic = 'force-dynamic';
+
 export default function BarsPage() {
   const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
   const searchParams = useSearchParams();
@@ -13,13 +16,10 @@ export default function BarsPage() {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // Only run initialization logic once on mount
-    if (hasInitialized.current) return;
-
     const barParam = searchParams.get("bar");
 
+    // If there's a URL param, always process it (search navigation)
     if (barParam) {
-      // Find the bar by name from URL param
       const bar = bars.find(b => b.name === decodeURIComponent(barParam));
       if (bar) {
         setSelectedBar(bar);
@@ -27,18 +27,16 @@ export default function BarsPage() {
         setTimeout(() => {
           router.replace("/bars", { scroll: false });
         }, 100);
-      } else {
-        // Bar not found, default to Brickyard
-        const brickyard = bars.find((b) => b.name === "Brickyard Craft kitchen & Bar");
-        setSelectedBar(brickyard ?? bars[0]);
       }
-    } else {
-      // No URL param, default to Brickyard
-      const brickyard = bars.find((b) => b.name === "Brickyard Craft kitchen & Bar");
-      setSelectedBar(brickyard ?? bars[0]);
+      return;
     }
 
-    // Mark as initialized so this doesn't run again
+    // Only run default initialization logic once on mount
+    if (hasInitialized.current) return;
+
+    // No URL param, default to Brickyard
+    const brickyard = bars.find((b) => b.name === "Brickyard Craft kitchen & Bar");
+    setSelectedBar(brickyard ?? bars[0]);
     hasInitialized.current = true;
   }, [searchParams, router]);
 
