@@ -8,22 +8,14 @@ interface TwitterIconProps {
   className?: string
   [key: string]: unknown
 }
-const Twitter = ({ className, ...props }: TwitterIconProps) => (
+const XIcon = ({ className, ...props }: TwitterIconProps) => (
   <svg
-    stroke="currentColor"
-    fill="currentColor"
-    strokeWidth="0"
     viewBox="0 0 24 24"
-    height="1em"
-    width="1em"
-    xmlns="http://www.w3.org/2000/svg"
     className={className}
+    fill="currentColor"
     {...props}
   >
-    <g>
-      <path fill="none" d="M0 0h24v24H0z"></path>
-      <path d="M22.162 5.656a8.384 8.384 0 0 1-2.402.658A4.196 4.196 0 0 0 21.6 4c-.82.488-1.719.83-2.656 1.015a4.182 4.182 0 0 0-7.126 3.814 11.874 11.874 0 0 1-8.62-4.37 4.168 4.168 0 0 0-.566 2.103c0 1.45.738 2.731 1.86 3.481a4.168 4.168 0 0 1-1.894-.523v.052a4.185 4.185 0 0 0 3.355 4.101 4.21 4.21 0 0 1-1.89.072A4.185 4.185 0 0 0 7.97 16.65a8.394 8.394 0 0 1-6.191 1.732 11.83 11.83 0 0 0 6.41 1.88c7.693 0 11.9-6.373 11.9-11.9 0-.18-.005-.362-.013-.54a8.496 8.496 0 0 0 2.087-2.165z"></path>
-    </g>
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 )
 
@@ -139,7 +131,7 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
     </div>
     <a href={tweet.url} target="_blank" rel="noreferrer">
       <span className="sr-only">Link to tweet</span>
-      <Twitter className="text-kalshi-text-secondary hover:text-white size-5 items-start transition-all ease-in-out hover:scale-105" />
+      <XIcon className="text-kalshi-text-secondary hover:text-white size-5 items-start transition-all ease-in-out hover:scale-105" />
     </a>
   </div>
 )
@@ -247,6 +239,76 @@ export const MagicTweet = ({
       <TweetHeader tweet={enrichedTweet} />
       <TweetBody tweet={enrichedTweet} />
       <TweetMedia tweet={enrichedTweet} />
+    </div>
+  )
+}
+
+/**
+ * MockTweetCard - For displaying fake/mock tweets with custom data
+ */
+export interface MockTweet {
+  user: {
+    name: string
+    handle: string
+    avatar: string
+    verified?: boolean
+  }
+  text: string
+  image?: string
+}
+
+export const MockTweetCard = ({
+  tweet,
+  className,
+}: {
+  tweet: MockTweet
+  className?: string
+}) => {
+  return (
+    <div
+      className={cn(
+        "relative flex h-fit w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border border-kalshi-border bg-kalshi-card p-5",
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="flex flex-row items-start justify-between tracking-normal">
+        <div className="flex items-center space-x-3">
+          <img
+            src={tweet.user.avatar}
+            alt={tweet.user.name}
+            height={48}
+            width={48}
+            className="border-kalshi-border h-12 w-12 overflow-hidden rounded-full border"
+          />
+          <div className="flex flex-col gap-0.5">
+            <span className="text-white flex items-center font-medium whitespace-nowrap">
+              {tweet.user.name}
+              {tweet.user.verified && (
+                <Verified className="ml-1 inline size-4 text-blue-500" />
+              )}
+            </span>
+            <span className="text-kalshi-text-secondary text-sm">
+              @{tweet.user.handle}
+            </span>
+          </div>
+        </div>
+        <XIcon className="text-kalshi-text-secondary hover:text-white size-5 transition-all ease-in-out hover:scale-105" />
+      </div>
+
+      {/* Tweet content */}
+      <p className="text-[15px] leading-relaxed tracking-normal text-white">
+        {tweet.text}
+      </p>
+
+      {/* Optional image */}
+      {tweet.image && (
+        <img
+          src={tweet.image}
+          alt="Tweet media"
+          className="rounded-xl border border-kalshi-border object-cover"
+        />
+      )}
     </div>
   )
 }

@@ -1,34 +1,37 @@
+import 'dotenv/config';
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { weather, database, kalshi } from "./routes";
+import type { Context } from 'hono';
 
 const app = new Hono();
 
+app.use('*', async (c: Context, next) => {
+  if (!c.env.OPENAI_API_KEY) {
+    console.error('❌ OPENAI_API_KEY environment variable is not set');
+    return c.json({ error: 'Server misconfiguration: api key not set' }, 500);
+  }
+  await next();
+});
+
 app.use("/*", cors());
 
-app.get("/weather", async (c) => {
-  const lat = c.req.query("lat");
-  const lon = c.req.query("lon");
+app.route("/weather", weather);
+app.route("/database", database);
+app.route("/kalshi", kalshi);
 
-  if (!lat || !lon) {
-    return c.json({ error: "lat and lon query parameters are required" }, 400);
-  }
-
-  const apiKey = process.env.WEATHER_API_KEY;
-  if (!apiKey) {
-    return c.json({ error: "WEATHER_API_KEY not configured" }, 500);
-  }
-
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
-
-  const res = await fetch(url);
-  const data = await res.json();
-
-  if (!res.ok) {
-    return c.json({ error: data.message || "Failed to fetch weather" }, res.status);
-  }
-
-  return c.json(data);
-});
+app.get('/', (c) => c.json({
+  name: 'Kalshi Bars Server',
+  // version: '1.0.0',
+  // endpoints: {
+  //   relations: '/api/relations',
+  //   relationsPricing: '/api/relations/price',
+  //   relationsGraph: '/api/relations/graph',
+  //   relationsGraphPricing: '/api/relations/graph/price',
+  //   relatedBets: '/api/related-bets',
+  //   dependencies: '/api/dependencies',
+  // },
+} as const));
 
 export default {
   port: 3001,

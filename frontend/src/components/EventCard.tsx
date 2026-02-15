@@ -24,7 +24,7 @@ export default function EventCard({ event, bars }: EventCardProps) {
             className="h-40 w-full object-cover"
           />
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-kalshi-card to-transparent" />
-          <span className="absolute top-3 left-3 rounded-full bg-kalshi-green/90 px-2 py-0.5 text-xs font-medium text-black">
+          <span className="absolute top-3 left-3 rounded-sm border border-kalshi-green/70 bg-kalshi-card/80 backdrop-blur-sm px-2 py-0.5 text-xs font-medium text-kalshi-green">
             {event.category}
           </span>
         </div>

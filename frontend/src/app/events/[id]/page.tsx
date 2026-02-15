@@ -43,7 +43,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
               className="w-full h-64 object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-kalshi-card via-transparent to-transparent" />
-            <span className="absolute top-4 left-4 rounded-full bg-kalshi-green/90 px-3 py-1 text-sm font-medium text-black">
+            <span className="absolute top-4 left-4 rounded-sm border border-kalshi-green/70 bg-kalshi-card/80 backdrop-blur-sm px-2.5 py-1 text-sm font-medium text-kalshi-green">
               {event.category}
             </span>
           </div>
