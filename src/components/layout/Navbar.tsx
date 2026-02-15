@@ -43,7 +43,7 @@ export default function Navbar() {
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
             <input
               type="text"
-              placeholder="Search markets"
+              placeholder="Search bars"
               className="h-9 w-full rounded-lg border border-kalshi-border bg-kalshi-card pl-9 pr-4 text-sm text-white placeholder-kalshi-text-secondary outline-none transition-colors focus:border-kalshi-text-secondary"
             />
           </div>
