@@ -1,9 +1,10 @@
 import Navbar from "@/components/layout/Navbar";
+import { MockTweetCard, type MockTweet } from "@/components/ui/tweet-card";
 import { ReviewCard, type MockReview } from "@/components/ui/review-card";
-import { bars } from "@/data/bars";
+import { bars, type Bar } from "@/data/bars";
 import { QRCodeSVG } from "qrcode.react";
 
-// Get bars that have images for their QR cards
+// Scan lineup helpers
 const barsWithImages = bars.filter((bar) => bar.image);
 
 const barScanCopy = [
@@ -22,10 +23,87 @@ const barScanCards = barsWithImages.slice(0, 8).map((bar, index) => ({
   message: barScanCopy[index] ?? `${bar.events[0]} is on deck. Scan to reserve your spot.`,
 }));
 
-const formatWebsite = (url: string) =>
-  url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+const formatWebsite = (url: string) => url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-// Reviews FROM customers (people visiting bars) - mixed platforms
+// Bar tweet helpers
+const formatHandle = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 15);
+
+const getBar = (name: string, fallbackIndex: number): Bar => {
+  const found = bars.find((bar) => bar.name === name);
+  return found ?? bars[fallbackIndex];
+};
+
+const createUser = (bar: Bar) => ({
+  name: bar.name,
+  handle: formatHandle(bar.name),
+  avatar: bar.image,
+  verified: true,
+});
+
+const featuredBars = {
+  stout: getBar("Stout", 0),
+  stans: getBar("Stan's Sports Bar", 1),
+  finnertys: getBar("Finnerty's", 2),
+  harlem: getBar("Harlem Tavern", 3),
+  hairylemon: getBar("The Hairy Lemon", 4),
+  bluehaven: getBar("Blue Haven", 5),
+};
+
+const mediaLibrary = {
+  brickyard: getBar("Brickyard Craft kitchen & Bar", 0).image,
+  sluggers: getBar("Sluggers World Class Sports Bar", 0).image,
+  finnertys: getBar("Finnerty's", 0).image,
+  harlem: getBar("Harlem Tavern", 0).image,
+  bluehaven: getBar("Blue Haven", 0).image,
+  cask: getBar("Cask 'n Flagon", 0).image,
+  banshee: getBar("The Banshee", 0).image,
+  chickies: getBar("Chickie's & Pete's", 0).image,
+  tonycs: getBar("Tony C's Sports Bar & Grill", 0).image,
+};
+
+const barTweets: MockTweet[] = [
+  {
+    user: createUser(featuredBars.stout),
+    platform: "google",
+    text: `New ⭐️⭐️⭐️⭐️⭐️ reviews keep coming for our ${featuredBars.stout.events[0]} setup. Sound on every screen at ${featuredBars.stout.location}.`,
+    image: mediaLibrary.brickyard,
+  },
+  {
+    user: createUser(featuredBars.stans),
+    platform: "instagram",
+    text: `Yankees vibes all weekend at ${featuredBars.stans.name}. Pregame, postgame, and the loudest crowd on River Ave. ⚾️`,
+    image: mediaLibrary.sluggers,
+  },
+  {
+    user: createUser(featuredBars.finnertys),
+    platform: "google",
+    text: `Appreciate every Google review about our ${featuredBars.finnertys.events[0]} watch parties. Keep them coming and we’ll keep the pints flowing.`,
+    image: mediaLibrary.finnertys,
+  },
+  {
+    user: createUser(featuredBars.harlem),
+    platform: "twitter",
+    text: `${featuredBars.harlem.name} patio heaters are on for ${featuredBars.harlem.events[0]} this afternoon. Grab a table outside and enjoy.`,
+    image: mediaLibrary.harlem,
+  },
+  {
+    user: createUser(featuredBars.hairylemon),
+    platform: "instagram",
+    text: `Fresh Guinness pours + ${featuredBars.hairylemon.events[0]} at ${featuredBars.hairylemon.name}. Doors at noon, come early. ☘️`,
+    image: mediaLibrary.cask,
+  },
+  {
+    user: createUser(featuredBars.bluehaven),
+    platform: "twitter",
+    text: `${featuredBars.bluehaven.name} brunch + ${featuredBars.bluehaven.events[1]} replays = Sunday sorted. Kitchen opens at 11.`,
+    image: mediaLibrary.bluehaven,
+  },
+];
+
 const customerReviews: MockReview[] = [
   {
     user: {
@@ -34,8 +112,8 @@ const customerReviews: MockReview[] = [
     },
     platform: "google",
     rating: 5,
-    text: "Just had the best Old Fashioned of my life at Death & Co. The bartenders here are actual artists. Incredible atmosphere and top-notch cocktails.",
-    image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop",
+    text: "The Brickyard staff treated our watch party like family. Perfect pours, sound dialed in, and they even saved us a booth.",
+    image: mediaLibrary.brickyard,
   },
   {
     user: {
@@ -44,8 +122,28 @@ const customerReviews: MockReview[] = [
     },
     platform: "google",
     rating: 4,
-    text: "Finally got into Please Don't Tell through the phone booth. Worth every second of the wait. Drinks were creative and the speakeasy vibe is unmatched.",
-    image: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&h=400&fit=crop",
+    text: "Sluggers’ happy hour is undefeated. $6 drafts, batting cages in the back, and every MLB game on.",
+    image: mediaLibrary.sluggers,
+  },
+  {
+    user: {
+      name: "Lena Patel",
+      avatar: "https://i.pravatar.cc/150?u=lena",
+    },
+    platform: "google",
+    rating: 5,
+    text: "Tony C’s set us up with a private booth for the playoffs. Huge screens and the wings were elite.",
+    image: mediaLibrary.tonycs,
+  },
+  {
+    user: {
+      name: "Marcus Lee",
+      avatar: "https://i.pravatar.cc/150?u=marcus",
+    },
+    platform: "google",
+    rating: 5,
+    text: "Harlem Tavern patio heaters saved us during the Sunday Ticket slate. Service never slowed down.",
+    image: mediaLibrary.harlem,
   },
   {
     user: {
@@ -54,8 +152,28 @@ const customerReviews: MockReview[] = [
     },
     platform: "yelp",
     rating: 5,
-    text: "The vibe at Attaboy is unmatched. Told them I wanted something citrusy and they absolutely delivered. No menu, just trust the bartenders.",
-    image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&h=400&fit=crop",
+    text: "Blue Haven’s brunch cocktails + Premier League replays is my new Sunday ritual. Zero bad seats.",
+    image: mediaLibrary.bluehaven,
+  },
+  {
+    user: {
+      name: "Chris Alvarez",
+      avatar: "https://i.pravatar.cc/150?u=chris",
+    },
+    platform: "yelp",
+    rating: 4,
+    text: "Cask ’n Flagon still feels like Fenway. Packed, loud, and the staff kept the rounds coming.",
+    image: mediaLibrary.cask,
+  },
+  {
+    user: {
+      name: "Bianca Flores",
+      avatar: "https://i.pravatar.cc/150?u=bianca",
+    },
+    platform: "yelp",
+    rating: 5,
+    text: "Chickie’s & Pete’s made us feel like we were at the stadium. Crabfries + playoff crowd = perfection.",
+    image: mediaLibrary.chickies,
   },
   {
     user: {
@@ -64,28 +182,18 @@ const customerReviews: MockReview[] = [
       avatar: "https://i.pravatar.cc/150?u=james",
     },
     platform: "twitter",
-    text: "Blind Tiger has the best craft beer selection in the village. 20 taps and every single one is fire 🍺",
-    image: "https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=600&h=400&fit=crop",
+    text: "The Banshee’s Guinness pour is elite. Champions League nights there feel like being in Dublin. ☘️",
+    image: mediaLibrary.banshee,
   },
   {
     user: {
-      name: "Olivia Martinez",
-      handle: "olivia.martinez",
-      avatar: "https://i.pravatar.cc/150?u=olivia",
+      name: "Nina Carter",
+      handle: "ninacarter",
+      avatar: "https://i.pravatar.cc/150?u=nina",
     },
-    platform: "instagram",
-    text: "Live jazz at The Velvet Room on a Tuesday night. This city never disappoints 🎷",
-    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=400&fit=crop",
-  },
-  {
-    user: {
-      name: "David Kim",
-      handle: "davidkim",
-      avatar: "https://i.pravatar.cc/150?u=david",
-    },
-    platform: "tiktok",
-    text: "The Dead Rabbit Irish Coffee hits different when it's 30 degrees outside. Best Irish bar in NYC, no debate.",
-    image: "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?w=600&h=400&fit=crop",
+    platform: "twitter",
+    text: "Blue Haven staying open late for overtime meant we didn’t miss a single play. Bartenders remembered everyone.",
+    image: mediaLibrary.bluehaven,
   },
 ];
 
@@ -183,6 +291,16 @@ export default function LearnMorePage() {
                   </div>
                 </div>
               </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Bar Tweets Section */}
+        <section className="mt-12">
+          <h2 className="text-xl font-semibold text-white mb-4">Recent Bar News</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+            {barTweets.map((tweet) => (
+              <MockTweetCard key={tweet.user.handle} tweet={tweet} className="h-full" />
             ))}
           </div>
         </section>

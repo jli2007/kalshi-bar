@@ -23,13 +23,12 @@ interface GroupedEvent {
   markets: KalshiMarket[];
 }
 
+const MAX_EVENTS = 3;
+
 export default function MarketsSection({ eventId, eventName, category }: MarketsSectionProps) {
   const [groupedEvents, setGroupedEvents] = useState<GroupedEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showAll, setShowAll] = useState(false);
-
-  const INITIAL_COUNT = 2;
 
   useEffect(() => {
     async function fetchMarkets() {
@@ -121,8 +120,7 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
     );
   }
 
-  const displayedEvents = showAll ? groupedEvents : groupedEvents.slice(0, INITIAL_COUNT);
-  const hiddenCount = groupedEvents.length - INITIAL_COUNT;
+  const displayedEvents = groupedEvents.slice(0, MAX_EVENTS);
 
   return (
     <div className="mb-8">
@@ -140,24 +138,6 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
           />
         ))}
       </div>
-
-      {hiddenCount > 0 && !showAll && (
-        <button
-          onClick={() => setShowAll(true)}
-          className="mt-4 w-full py-3 rounded-xl border border-kalshi-green/30 bg-kalshi-green/5 text-kalshi-green font-medium text-sm hover:bg-kalshi-green/10 transition-colors"
-        >
-          Show {hiddenCount} more event{hiddenCount > 1 ? "s" : ""}
-        </button>
-      )}
-
-      {showAll && groupedEvents.length > INITIAL_COUNT && (
-        <button
-          onClick={() => setShowAll(false)}
-          className="mt-4 w-full py-3 rounded-xl border border-white/10 bg-white/5 text-kalshi-text-secondary font-medium text-sm hover:bg-white/10 transition-colors"
-        >
-          Show less
-        </button>
-      )}
     </div>
   );
 }

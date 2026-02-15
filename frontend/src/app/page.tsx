@@ -8,6 +8,7 @@ import { bars, type Bar } from "@/data/bars";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 const categories = ["Trendy", "Top rated", "Fan favorite"];
+const BARS_PER_CATEGORY = 6;
 
 function getBarsForTag(tag: string): Bar[] {
   return bars.filter((bar) => bar.tags.includes(tag));
@@ -41,6 +42,7 @@ export default function Home() {
         {categories.map((tag, index) => {
           const tagBars = getBarsForTag(tag);
           if (tagBars.length === 0) return null;
+          const displayedBars = tagBars.slice(0, BARS_PER_CATEGORY);
           return (
             <section key={tag}>
               {index > 0 && <hr className="my-6 border-kalshi-border" />}
@@ -49,7 +51,7 @@ export default function Home() {
                 <ChevronRightIcon className="h-5 w-5" />
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {tagBars.slice(0, 3).map((bar) => (
+                {displayedBars.map((bar) => (
                   <BarCard
                     key={`${tag}-${bar.name}`}
                     bar={bar}

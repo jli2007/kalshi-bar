@@ -39,9 +39,7 @@ const GoogleIcon = ({ className, ...props }: { className?: string; [key: string]
 )
 
 const YelpIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="#FF1A1A" {...props}>
-    <path d="M11.333 2c-.49 0-1.095.456-1.31.757L4.777 10.8c-.393.553-.198 1.23.433 1.501l3.36 1.446c.425.182.86.023 1.082-.264a.99.99 0 0 0 .159-.612L9.666 4.08c-.013-.302-.034-.76-.132-1.068C9.395 2.573 8.93 2 8.544 2h2.789zm.792 10.375c-.457-.173-.885.04-1.088.31a1 1 0 0 0-.153.618l.248 3.973c.021.555.498 1.224.998 1.224h.013c.498-.005.963-.688.966-1.243l.037-3.978a1 1 0 0 0-.138-.62c-.2-.273-.427-.45-.883-.284zm3.792 2.3c-.11.434.09.828.376 1.04l3.063 2.336c.442.337 1.148.27 1.418-.266l.016-.033c.263-.52.076-1.158-.369-1.478l-3.1-2.23a.97.97 0 0 0-.607-.16c-.418.032-.7.357-.797.791zm-7.924 2.19c-.102-.432-.394-.745-.812-.762a.97.97 0 0 0-.603.178L3.53 18.553c-.43.352-.567 1.003-.271 1.503l.016.027c.287.486.994.609 1.447.288l3.013-2.13c.36-.255.538-.658.558-1.028a1 1 0 0 0-.3-.348zm8.257-4.702a1 1 0 0 0-.169.61l.31 3.96c.043.554.53 1.21 1.028 1.197h.012c.498-.017.95-.712.94-1.267l-.178-3.975a1 1 0 0 0-.166-.612c-.212-.268-.644-.46-1.098-.273l-.014.006c-.258.097-.535.098-.665.354z" />
-  </svg>
+  <img src="/yelp.svg" alt="Yelp" className={className} loading="lazy" {...props} />
 )
 
 const XIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
@@ -122,7 +120,7 @@ export const ReviewCard = ({
   return (
     <div
       className={cn(
-        "relative flex h-fit w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border border-kalshi-border bg-kalshi-card p-5",
+        "relative flex h-full w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border border-kalshi-border bg-kalshi-card p-5",
         className
       )}
     >
@@ -143,9 +141,11 @@ export const ReviewCard = ({
                 <Verified className="ml-1 inline size-4 text-blue-500" />
               )}
             </span>
-            <span className="text-kalshi-text-secondary text-sm">
-              {review.user.handle ? `@${review.user.handle}` : config.label}
-            </span>
+            {review.user.handle && (
+              <span className="text-kalshi-text-secondary text-sm">
+                @{review.user.handle}
+              </span>
+            )}
           </div>
         </div>
         <PlatformIcon className={cn(
@@ -160,18 +160,24 @@ export const ReviewCard = ({
       )}
 
       {/* Review text */}
-      <p className="text-[15px] leading-relaxed tracking-normal text-white">
+      <p className="text-[15px] leading-relaxed tracking-normal text-white flex-1">
         {review.text}
       </p>
 
       {/* Optional image */}
-      {review.image && (
-        <img
-          src={review.image}
-          alt="Review media"
-          className="mt-auto h-48 w-full rounded-xl border border-kalshi-border object-cover"
-        />
-      )}
+      <div className="mt-auto">
+        {review.image ? (
+          <img
+            src={review.image}
+            alt="Review media"
+            className="h-48 w-full rounded-xl border border-kalshi-border object-cover"
+          />
+        ) : (
+          <div className="flex h-48 w-full items-center justify-center rounded-xl border border-dashed border-kalshi-border text-sm text-kalshi-text-secondary">
+            Photo coming soon
+          </div>
+        )}
+      </div>
     </div>
   )
 }

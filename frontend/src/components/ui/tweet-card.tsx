@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { enrichTweet, type EnrichedTweet, type TweetProps } from "react-tweet"
 import { getTweet, type Tweet } from "react-tweet/api"
 
+import { SOCIAL_PLATFORM_CONFIG, type SocialPlatform } from "@/components/ui/social-platform-icons"
 import { cn } from "@/lib/utils"
 
 interface TwitterIconProps {
@@ -246,6 +247,8 @@ export const MagicTweet = ({
 /**
  * MockTweetCard - For displaying fake/mock tweets with custom data
  */
+type BarPlatform = Extract<SocialPlatform, "google" | "yelp" | "twitter" | "instagram">
+
 export interface MockTweet {
   user: {
     name: string
@@ -253,6 +256,7 @@ export interface MockTweet {
     avatar: string
     verified?: boolean
   }
+  platform: BarPlatform
   text: string
   image?: string
 }
@@ -264,10 +268,13 @@ export const MockTweetCard = ({
   tweet: MockTweet
   className?: string
 }) => {
+  const platformMeta = SOCIAL_PLATFORM_CONFIG[tweet.platform]
+  const PlatformIcon = platformMeta.icon
+
   return (
     <div
       className={cn(
-        "relative flex h-fit w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border border-kalshi-border bg-kalshi-card p-5",
+        "relative flex h-full w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border border-kalshi-border bg-kalshi-card p-5",
         className
       )}
     >
@@ -293,22 +300,30 @@ export const MockTweetCard = ({
             </span>
           </div>
         </div>
-        <XIcon className="text-kalshi-text-secondary hover:text-white size-5 transition-all ease-in-out hover:scale-105" />
+        <div className="flex items-center text-kalshi-text-secondary text-sm">
+          <PlatformIcon className="size-5" />
+        </div>
       </div>
 
       {/* Tweet content */}
-      <p className="text-[15px] leading-relaxed tracking-normal text-white">
+      <p className="text-[15px] leading-relaxed tracking-normal text-white flex-1">
         {tweet.text}
       </p>
 
       {/* Optional image */}
-      {tweet.image && (
-        <img
-          src={tweet.image}
-          alt="Tweet media"
-          className="rounded-xl border border-kalshi-border object-cover"
-        />
-      )}
+      <div className="mt-auto">
+        {tweet.image ? (
+          <img
+            src={tweet.image}
+            alt="Tweet media"
+            className="h-44 w-full rounded-xl border border-kalshi-border object-cover"
+          />
+        ) : (
+          <div className="flex h-44 w-full items-center justify-center rounded-xl border border-dashed border-kalshi-border text-sm text-kalshi-text-secondary">
+            No media
+          </div>
+        )}
+      </div>
     </div>
   )
 }

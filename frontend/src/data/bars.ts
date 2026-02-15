@@ -63,7 +63,7 @@ export const bars: Bar[] = [
       "https://static.wixstatic.com/media/bd42b5_0200e2aa79f941abaebe75bb7dbec197~mv2.png",
     website: "https://www.hairylemonnyc.com/",
     events: ["Premier League", "UFC Fight Night"],
-    tags: ["Dive bar", "Late night"],
+    tags: ["Dive bar", "Late night", "Trendy"],
   },
   {
     name: "Stout",
@@ -195,7 +195,7 @@ export const bars: Bar[] = [
       "https://mcgillins.com/wp-content/uploads/2015/11/mcgillins-logo-large.png",
     website: "https://mcgillins.com/",
     events: ["World Cup", "NFL Sunday Ticket", "MLB Playoffs"],
-    tags: ["Historic", "Classic"],
+    tags: ["Historic", "Classic", "Top rated"],
   },
   {
     name: "Misconduct Tavern",
@@ -250,7 +250,7 @@ export const bars: Bar[] = [
       "https://baltimore.org/wp-content/uploads/2020/04/IMG_0332_BA95F700-97E9-4E30-91444EDD733B6295_6ca72c23-8e18-4e05-9765e329ed76a3df-850x750-c-center.jpg",
     website: "https://www.picklespub.com/",
     events: ["MLB Playoffs", "NFL Sunday Ticket", "March Madness"],
-    tags: ["Classic", "Legendary"],
+    tags: ["Classic", "Legendary", "Fan favorite"],
   },
   {
     name: "Asbury Ale House",

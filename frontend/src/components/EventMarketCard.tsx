@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { ShineBorder } from "@/components/ui/ShineBorder";
 import type { KalshiMarket } from "./MarketCard";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CandlestickPoint {
   ts: number;
@@ -59,12 +61,19 @@ function getOutcomeLabel(market: KalshiMarket): string {
   return outcome;
 }
 
+function getKalshiMarketUrl(markets: KalshiMarket[]): string | null {
+  const market = markets[0];
+  if (!market) return null;
+  return `https://kalshi.com/markets/${market.ticker}`;
+}
+
 export default function EventMarketCard({
   eventTitle,
   markets,
 }: EventMarketCardProps) {
   const [outcomes, setOutcomes] = useState<OutcomeData[]>([]);
   const [loading, setLoading] = useState(true);
+  const kalshiUrl = useMemo(() => getKalshiMarketUrl(markets), [markets]);
 
   const totalVolume = markets.reduce((sum, m) => sum + (m.volume || 0), 0);
 
@@ -147,7 +156,20 @@ export default function EventMarketCard({
       />
 
       <div className="p-6">
-        <h3 className="text-xl font-semibold text-white mb-6">{eventTitle}</h3>
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <h3 className="text-xl font-semibold text-white">{eventTitle}</h3>
+          {kalshiUrl && (
+            <Link
+              href={kalshiUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-kalshi-green/40 bg-kalshi-green/10 px-4 py-2 text-xs font-medium text-kalshi-green hover:bg-kalshi-green/20 transition-colors"
+            >
+              View on Kalshi
+              <ExternalLinkIcon className="h-3.5 w-3.5" />
+            </Link>
+          )}
+        </div>
         <div className="flex gap-8">
           <div className="flex-1">
             <div className="flex items-center text-xs text-kalshi-text-secondary mb-3">
@@ -156,7 +178,7 @@ export default function EventMarketCard({
               <span className="w-20 text-center">Odds</span>
             </div>
 
-            {outcomes.map((outcome, index) => {
+            {outcomes.map((outcome) => {
               const price =
                 outcome.market.yes_bid || outcome.market.last_price || 50;
               const payout = price > 0 ? (100 / price).toFixed(2) : "—";
@@ -168,18 +190,18 @@ export default function EventMarketCard({
                 >
                   <div className="flex-1 flex items-center gap-3">
                     {outcome.logoUrl ? (
-                      <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-white/5">
                         <Image
                           src={outcome.logoUrl}
                           alt={outcome.label}
                           fill
-                          sizes="32px"
-                          className="object-cover"
+                          sizes="40px"
+                          className="object-contain p-1"
                         />
                       </div>
                     ) : (
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium"
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
                         style={{
                           backgroundColor: `${outcome.color}20`,
                           color: outcome.color,
@@ -296,6 +318,11 @@ function MultiLineChart({
   const minTime = Math.min(...allTimes);
   const maxTime = Math.max(...allTimes);
   const timeRange = maxTime - minTime || 1;
+  const textureId = `chartTexture-${
+    outcomesWithData[0]?.market.ticker
+      ? outcomesWithData[0].market.ticker.replace(/[^a-zA-Z0-9]/g, "")
+      : "base"
+  }`;
 
   return (
     <div className="h-full w-full relative">
@@ -313,6 +340,39 @@ function MultiLineChart({
           preserveAspectRatio="none"
           className="w-full h-full"
         >
+          <defs>
+            <pattern
+              id={textureId}
+              patternUnits="userSpaceOnUse"
+              width="4"
+              height="4"
+            >
+              <path
+                d="M0 4 L4 0"
+                stroke="rgba(255,255,255,0.04)"
+                strokeWidth="0.5"
+              />
+            </pattern>
+            {outcomesWithData.map((outcome) => {
+              const gradientId = `lineGradient-${outcome.market.ticker.replace(/[^a-zA-Z0-9]/g, "")}`;
+              return (
+                <linearGradient key={gradientId} id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={outcome.color} stopOpacity="0.3" />
+                  <stop offset="100%" stopColor={outcome.color} stopOpacity="0" />
+                </linearGradient>
+              );
+            })}
+          </defs>
+
+          <rect
+            x="0"
+            y="0"
+            width="100"
+            height="100"
+            fill={`url(#${textureId})`}
+            opacity="0.5"
+          />
+
           {[0, 25, 50, 75, 100].map((y) => (
             <line
               key={y}
@@ -328,20 +388,27 @@ function MultiLineChart({
           ))}
 
           {outcomesWithData.map((outcome) => {
-            const points = outcome.candlesticks
-              .map((c) => {
-                const x = ((c.ts - minTime) / timeRange) * 100;
-                const y = 100 - c.price;
-                return `${x},${y}`;
-              })
-              .join(" ");
+            const coords = outcome.candlesticks.map((c) => {
+              const x = ((c.ts - minTime) / timeRange) * 100;
+              const y = 100 - c.price;
+              return { x, y };
+            });
 
-            const lastPoint =
-              outcome.candlesticks[outcome.candlesticks.length - 1];
-            const lastY = 100 - lastPoint.price;
+            if (!coords.length) return null;
+
+            const points = coords.map((c) => `${c.x},${c.y}`).join(" ");
+            const areaPath = `M${coords[0].x},100 ${coords
+              .map((c) => `L${c.x},${c.y}`)
+              .join(" ")} L${coords[coords.length - 1].x},100 Z`;
+            const gradientId = `lineGradient-${outcome.market.ticker.replace(/[^a-zA-Z0-9]/g, "")}`;
 
             return (
               <g key={outcome.market.ticker}>
+                <path
+                  d={areaPath}
+                  fill={`url(#${gradientId})`}
+                  opacity="0.9"
+                />
                 <polyline
                   fill="none"
                   stroke={outcome.color}
@@ -351,13 +418,18 @@ function MultiLineChart({
                   points={points}
                   vectorEffect="non-scaling-stroke"
                 />
-                <circle
-                  cx="100"
-                  cy={lastY}
-                  r="4"
-                  fill={outcome.color}
-                  vectorEffect="non-scaling-stroke"
-                />
+                {coords.map((coord, index) => (
+                  <circle
+                    key={`${outcome.market.ticker}-point-${index}`}
+                    cx={coord.x}
+                    cy={coord.y}
+                    r="1.5"
+                    fill="#0f172a"
+                    stroke={outcome.color}
+                    strokeWidth="0.8"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ))}
               </g>
             );
           })}
