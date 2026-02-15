@@ -23,6 +23,8 @@ const SOCCER_COMPETITIONS = [
 const MAJOR_LEAGUES = ["nba", "nfl", "mlb", "nhl"];
 
 export class LogoService {
+  private hostCooldowns = new Map<string, number>();
+  private hostCooldownMs = 5 * 60 * 1000;
   async getLogoUrl(query: string, context?: string): Promise<string | null> {
     const cacheKey = `${query}|${context || ""}`.toLowerCase().trim();
     if (logoCache.has(cacheKey)) {
@@ -108,8 +110,10 @@ export class LogoService {
 
       try {
           const url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(name)}`;
-          const res = await fetch(url);
-          const data = await res.json();
+          const data = await this.fetchJson(url);
+          if (!data) {
+            continue;
+          }
 
           const team = this.pickBestTeam(data?.teams, desiredSport, desiredLeague);
           if (team?.strBadge) {
@@ -146,8 +150,10 @@ export class LogoService {
       if (expanded) {
         try {
           const expandedUrl = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(expanded)}`;
-          const expandedRes = await fetch(expandedUrl);
-          const expandedData = await expandedRes.json();
+          const expandedData = await this.fetchJson(expandedUrl);
+          if (!expandedData) {
+            return null;
+          }
           const expandedTeam = this.pickBestTeam(expandedData?.teams, desiredSport, desiredLeague);
           if (expandedTeam?.strBadge) {
             console.log(`   Found badge (expanded): ${expandedTeam.strTeam}`);
@@ -213,13 +219,17 @@ export class LogoService {
   }
 
   private async fetchFromWikipedia(query: string, context?: string): Promise<string | null> {
-    const searchQuery = context ? `${query} ${context}` : query;
+    const trimmedContext = context ? context.split(/\s+/).slice(0, 6).join(" ") : "";
+    const searchQuery = context ? `${query} ${trimmedContext}` : query;
+    const finalQuery = searchQuery.length > 80 ? query : searchQuery;
     console.log(`   Searching Wikipedia: "${searchQuery}"`);
 
     try {
-      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&format=json&origin=*`;
-      const searchRes = await fetch(searchUrl);
-      const searchData = await searchRes.json();
+      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(finalQuery)}&format=json&origin=*`;
+      const searchData = await this.fetchJson(searchUrl);
+      if (!searchData) {
+        return null;
+      }
 
       const firstResult = searchData?.query?.search?.[0];
       if (!firstResult) {
@@ -230,8 +240,10 @@ export class LogoService {
       const pageTitle = firstResult.title;
 
       const imageUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(pageTitle)}&prop=pageimages&format=json&pithumbsize=200&origin=*`;
-      const imageRes = await fetch(imageUrl);
-      const imageData = await imageRes.json();
+      const imageData = await this.fetchJson(imageUrl);
+      if (!imageData) {
+        return null;
+      }
 
       const pages = imageData?.query?.pages;
       const page = pages ? Object.values(pages)[0] as any : null;
@@ -298,6 +310,41 @@ export class LogoService {
     if (!context) return false;
     const ctx = context.toLowerCase();
     return SOCCER_COMPETITIONS.some((comp) => ctx.includes(comp));
+  }
+
+  private async fetchJson(url: string): Promise<any | null> {
+    const host = new URL(url).host;
+    const now = Date.now();
+    const cooldownUntil = this.hostCooldowns.get(host) || 0;
+    if (now < cooldownUntil) {
+      return null;
+    }
+
+    const res = await fetch(url);
+    if (!res.ok) {
+      if (res.status === 429) {
+        this.hostCooldowns.set(host, now + this.hostCooldownMs);
+        console.warn(`Rate limited by ${host}. Cooling down.`);
+        return null;
+      }
+      const body = await res.text();
+      console.error(`HTTP ${res.status} for ${host}: ${body.substring(0, 200)}`);
+      return null;
+    }
+
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      const body = await res.text();
+      console.error(`Non-JSON response for ${host}: ${body.substring(0, 200)}`);
+      return null;
+    }
+
+    try {
+      return await res.json();
+    } catch (error) {
+      console.error(`JSON parse error for ${host}:`, error);
+      return null;
+    }
   }
 
   async getLogosForTeams(

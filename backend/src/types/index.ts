@@ -9,6 +9,9 @@ export interface KalshiMarket {
   series_ticker: string;
   title: string;
   subtitle?: string;
+  event_title?: string;
+  event_slug?: string;
+  market_url?: string | null;
   yes_bid: number;
   yes_ask: number;
   no_bid: number;

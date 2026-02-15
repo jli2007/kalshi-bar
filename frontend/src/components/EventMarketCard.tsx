@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
 import { ShineBorder } from "@/components/ui/ShineBorder";
 import type { KalshiMarket } from "./MarketCard";
 import Image from "next/image";
-import Link from "next/link";
 
 interface CandlestickPoint {
   ts: number;
@@ -104,19 +102,12 @@ function getOutcomeLabel(market: KalshiMarket): string {
   return outcome;
 }
 
-function getKalshiMarketUrl(markets: KalshiMarket[]): string | null {
-  const market = markets[0];
-  if (!market) return null;
-  return `https://kalshi.com/markets/${market.ticker}`;
-}
-
 export default function EventMarketCard({
   eventTitle,
   markets,
 }: EventMarketCardProps) {
   const [outcomes, setOutcomes] = useState<OutcomeData[]>([]);
   const [loading, setLoading] = useState(true);
-  const kalshiUrl = useMemo(() => getKalshiMarketUrl(markets), [markets]);
 
   const totalVolume = markets.reduce((sum, m) => sum + (m.volume || 0), 0);
 
@@ -141,9 +132,10 @@ export default function EventMarketCard({
       const seriesTicker = markets[0]?.series_ticker || "";
       const context = getContextFromSeries(seriesTicker);
       const logoContext = [context, eventTitle].filter(Boolean).join(" ");
+      const shouldFetchLogos = labels.length <= 5;
 
       try {
-        if (labels.length > 0) {
+        if (labels.length > 0 && shouldFetchLogos) {
           const logoRes = await fetch(`${apiUrl}/kalshi/logos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -205,17 +197,6 @@ export default function EventMarketCard({
       <div className="p-6">
         <div className="flex items-start justify-between gap-4 mb-6">
           <h3 className="text-xl font-semibold text-white">{eventTitle}</h3>
-          {kalshiUrl && (
-            <Link
-              href={kalshiUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-kalshi-green/40 bg-kalshi-green/10 px-4 py-2 text-xs font-medium text-kalshi-green hover:bg-kalshi-green/20 transition-colors"
-            >
-              View on Kalshi
-              <ExternalLinkIcon className="h-3.5 w-3.5" />
-            </Link>
-          )}
         </div>
         <div className="flex gap-8">
           <div className="flex-1">

@@ -224,11 +224,18 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
     try {
       const response = await this.fetchWithFallback(path, params);
 
-      if (!response || !response.ok) {
-        if (response) {
-          const errorText = await response.text();
-          console.error(`   ❌ HTTP ${response.status}:`, errorText.substring(0, 200));
-        }
+      if (!response) {
+        return [];
+      }
+
+      if (response.status === 429) {
+        console.warn("Rate limited fetching series, returning empty.");
+        return [];
+      }
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`   ❌ HTTP ${response.status}:`, errorText.substring(0, 200));
         return [];
       }
 
@@ -266,11 +273,18 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
     try {
       const response = await this.fetchWithFallback(path, params);
 
-      if (!response || !response.ok) {
-        if (response) {
-          const errorText = await response.text();
-          console.error(`   ❌ HTTP ${response.status}:`, errorText.substring(0, 200));
-        }
+      if (!response) {
+        return [];
+      }
+
+      if (response.status === 429) {
+        console.warn("Rate limited fetching candlesticks, returning empty.");
+        return [];
+      }
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`HTTP ${response.status}:`, errorText.substring(0, 200));
         return [];
       }
 
@@ -595,6 +609,9 @@ Return ONLY the ticker (e.g. "KXNBAGAME") or "NONE" if no match. No explanation.
       series_ticker: seriesTicker,
       title: market.title || market.yes_sub_title || 'Unknown',
       subtitle: market.subtitle || market.no_sub_title,
+      event_title: market.event_title || market.event_title_text || market.event_sub_title || market.event_subtitle,
+      event_slug: market.event_slug || market.event_title_slug || market.event_slug_text,
+      market_url: market.market_url || market.url || market.market_url_path || null,
       yes_bid: market.yes_bid || 0,
       yes_ask: market.yes_ask || 0,
       no_bid: market.no_bid || 0,
