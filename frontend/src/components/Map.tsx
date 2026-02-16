@@ -59,7 +59,6 @@ export default function Map({ selectedBar, onClose, onSelectBar, visibleBars }: 
     };
   }, []);
 
-  // Place green markers for all visible bars
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !visibleBars?.length) return;
@@ -95,7 +94,6 @@ export default function Map({ selectedBar, onClose, onSelectBar, visibleBars }: 
     };
   }, [visibleBars, onSelectBar]);
 
-  // Fly to selected bar
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedBar) return;

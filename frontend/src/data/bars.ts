@@ -2,7 +2,7 @@ export interface Bar {
   name: string;
   address: string;
   location: string;
-  coordinates: [number, number]; // [lng, lat]
+  coordinates: [number, number];
   image: string;
   website: string;
   events: string[];

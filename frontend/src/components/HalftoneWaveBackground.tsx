@@ -49,8 +49,8 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
       varying vec2 v_uv;
       uniform float u_time;
       uniform vec2 u_resolution;
-      uniform vec3 u_trail[${MAX_TRAIL_POINTS}]; // x, y, life
-      uniform vec2 u_trailVel[${MAX_TRAIL_POINTS}]; // vx, vy
+      uniform vec3 u_trail[${MAX_TRAIL_POINTS}];
+      uniform vec2 u_trailVel[${MAX_TRAIL_POINTS}];
       uniform int u_trailCount;
 
       #define PI 3.14159265359
@@ -99,7 +99,6 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
         vec2 uv = v_uv;
         vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
 
-        // Calculate total fluid distortion from all trail points
         vec2 totalDistortion = vec2(0.0);
         float totalInfluence = 0.0;
 
@@ -115,14 +114,11 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
             vec2 diff = (uv - pointPos) * aspect;
             float dist = length(diff);
 
-            // Influence falls off with distance, scaled by life
             float influence = life * smoothstep(0.28, 0.0, dist);
 
-            // Push effect - points push the fluid away based on their velocity
             vec2 pushDir = normalize(diff + 0.001);
             vec2 velInfluence = vel * life * 0.2;
 
-            // Swirl effect around the point
             vec2 swirl = vec2(-diff.y, diff.x) * influence * 0.12;
 
             totalDistortion += (pushDir * influence * 0.03 + velInfluence * smoothstep(0.2, 0.0, dist) + swirl);
@@ -132,7 +128,6 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
 
         vec2 distortedUV = uv + totalDistortion;
 
-        // Create flowing noise field
         float time = u_time * 0.04;
         vec2 noiseCoord = distortedUV * 2.5;
 
@@ -142,14 +137,11 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
 
         float combinedNoise = (noise1 + noise2 * 0.7 + noise3 * 0.5) / 2.2;
 
-        // Add fluid influence to noise
         combinedNoise += totalInfluence * 0.18;
 
-        // Halftone dot pattern
         float dotScale = 60.0;
         vec2 dotUV = distortedUV * dotScale;
 
-        // Wave distortion - affected by trail
         float waveX = sin(distortedUV.y * 12.0 + time * 2.0 + combinedNoise * 2.5 + totalInfluence * 2.0) * 0.12;
         float waveY = cos(distortedUV.x * 10.0 + time * 1.8 + combinedNoise * 2.0 + totalInfluence * 1.8) * 0.12;
         dotUV += vec2(waveX, waveY) * (1.0 + combinedNoise * 0.8 + totalInfluence);
@@ -157,7 +149,6 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
         vec2 dotCell = floor(dotUV);
         vec2 dotPos = fract(dotUV) - 0.5;
 
-        // Dot size - grows with fluid influence
         float dotNoise = fbm(dotCell * 0.04 + time * 0.2);
         float baseDotSize = 0.13 + combinedNoise * 0.07 + dotNoise * 0.05;
         baseDotSize *= 0.9 + totalInfluence * 0.9;
@@ -165,7 +156,6 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
         float dot = length(dotPos);
         float dotMask = 1.0 - smoothstep(baseDotSize - 0.08, baseDotSize + 0.04, dot);
 
-        // Color gradient
         vec3 darkGreen = vec3(0.03, 0.08, 0.06);
         vec3 midGreen = vec3(0.05, 0.22, 0.17);
         vec3 brightGreen = vec3(0.10, 0.46, 0.32);
@@ -181,7 +171,6 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
 
         vec3 dotColor = bgColor * 1.22 + vec3(0.04, 0.10, 0.08);
 
-        // Add glow where fluid is active
         dotColor += brightGreen * totalInfluence * 0.08;
 
         vec3 finalColor = mix(bgColor * 0.62, dotColor, dotMask * 0.76);
@@ -189,7 +178,6 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
         float glow = smoothstep(0.5, 1.0, gradientT) * 0.08;
         finalColor += brightGreen * glow * dotMask;
 
-        // Extra glow from fluid trail
         finalColor += brightGreen * totalInfluence * 0.02;
 
         float vignette = 1.0 - length((uv - 0.5) * 1.2) * 0.5;

@@ -255,9 +255,6 @@ export const MagicTweet = ({
   )
 }
 
-/**
- * MockTweetCard - For displaying fake/mock tweets with custom data
- */
 type BarPlatform = Extract<SocialPlatform, "google" | "yelp" | "twitter" | "instagram">
 
 export interface MockTweet {
@@ -342,9 +339,6 @@ export const MockTweetCard = ({
   )
 }
 
-/**
- * TweetCard (Server Side Only)
- */
 export const TweetCard = async ({
   id,
   components,

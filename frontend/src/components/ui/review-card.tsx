@@ -17,8 +17,6 @@ export interface MockReview {
   image?: string
 }
 
-// Platform Icons
-
 const GoogleIcon = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
   <svg viewBox="0 0 24 24" className={className} {...props}>
     <path
@@ -77,8 +75,6 @@ const Verified = ({ className, ...props }: { className?: string; [key: string]: 
   </svg>
 )
 
-// Platform metadata
-
 const platformConfig: Record<ReviewPlatform, {
   icon: React.ComponentType<{ className?: string }>
   label: string
@@ -90,8 +86,6 @@ const platformConfig: Record<ReviewPlatform, {
   instagram: { icon: InstagramIcon, label: "Instagram" },
   tiktok: { icon: TikTokIcon, label: "TikTok" },
 }
-
-// Star Rating
 
 const StarRating = ({ rating, color }: { rating: number; color: string }) => (
   <div className="flex gap-0.5">
@@ -105,8 +99,6 @@ const StarRating = ({ rating, color }: { rating: number; color: string }) => (
     ))}
   </div>
 )
-
-// ReviewCard
 
 export const ReviewCard = ({
   review,

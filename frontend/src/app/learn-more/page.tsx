@@ -5,7 +5,6 @@ import { ReviewCard, type MockReview } from "@/components/ui/review-card";
 import { bars, type Bar } from "@/data/bars";
 import { QRCodeSVG } from "qrcode.react";
 
-// Scan lineup helpers
 const barsWithImages = bars.filter((bar) => bar.image);
 
 const barScanCopy = [
@@ -26,7 +25,6 @@ const barScanCards = barsWithImages.slice(0, 8).map((bar, index) => ({
 
 const formatWebsite = (url: string) => url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-// Bar tweet helpers
 const formatHandle = (name: string) =>
   name
     .toLowerCase()
