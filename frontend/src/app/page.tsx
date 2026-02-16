@@ -153,7 +153,7 @@ export default function LandingPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              How it works
+              Kalshi&apos;s Bar Platform
             </motion.h2>
 
             <BentoGrid>
@@ -321,7 +321,7 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                Featured bars
+                Featured Bars
               </motion.h2>
             </div>
 
@@ -387,7 +387,7 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                Top rated
+                Top Rated
               </motion.h2>
             </div>
 
