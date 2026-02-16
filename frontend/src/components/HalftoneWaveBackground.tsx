@@ -352,8 +352,8 @@ export default function HalftoneWaveBackground({ className = "" }: HalftoneWaveB
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 w-full h-full ${className}`}
-      style={{ touchAction: "none" }}
+      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
+      style={{ touchAction: "pan-y" }}
     />
   );
 }

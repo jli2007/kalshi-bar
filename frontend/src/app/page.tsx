@@ -99,20 +99,18 @@ export default function LandingPage() {
       <Navbar />
       <main className="relative min-h-screen">
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-          {/* Procedural halftone wave background */}
           <HalftoneWaveBackground />
-          {/* Gradient overlay for text readability and transition to next section */}
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,12,10,0.85)_0%,rgba(7,12,10,0.2)_35%,rgba(7,12,10,0.9)_100%)]" />
 
           <motion.div
-            className="relative z-10 text-center px-4 -mt-20 max-w-4xl mx-auto"
+            className="relative z-10 mx-auto max-w-4xl px-6 text-center sm:px-4 md:-mt-20"
             variants={heroStagger}
             initial="hidden"
             animate="visible"
           >
             <motion.h1
               variants={heroChild}
-              className="text-5xl md:text-8xl font-semibold text-white mb-6 tracking-tight"
+              className="text-5xl font-semibold text-white mb-6 tracking-tight sm:text-6xl md:text-8xl"
               style={{
                 textShadow: "0 0 40px rgba(40, 204, 149, 0.5), 0 0 80px rgba(40, 204, 149, 0.3), 0 4px 20px rgba(0, 0, 0, 0.5)"
               }}
@@ -123,7 +121,7 @@ export default function LandingPage() {
 
             <motion.p
               variants={heroChild}
-              className="text-md md:text-2xl text-white mb-10 max-w-2xl mx-auto"
+              className="mx-auto mb-10 max-w-2xl text-base text-white sm:text-lg md:text-2xl"
               style={{
                 textShadow: "0 2px 10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(40, 204, 149, 0.2)"
               }}

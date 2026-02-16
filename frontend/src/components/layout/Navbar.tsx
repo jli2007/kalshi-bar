@@ -117,8 +117,8 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
           </div>
         </div>
 
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
-          <div className="relative w-96">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+          <div className="relative w-[clamp(16rem,32vw,24rem)]">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
             <input
               type="text"
