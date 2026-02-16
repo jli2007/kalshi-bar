@@ -44,8 +44,13 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   }, [results.length, query]);
 
   const handleSelect = (bar: Bar) => {
-    // Navigate to bars page with selected bar
-    router.push(`/bars?bar=${encodeURIComponent(bar.name)}`);
+    // If we have an onSelectBar callback (we're on the /bars page), use it
+    if (onSelectBar) {
+      onSelectBar(bar);
+    } else {
+      // Otherwise navigate to bars page with selected bar
+      router.push(`/bars?bar=${encodeURIComponent(bar.name)}`);
+    }
 
     // Clear search state
     setQuery("");

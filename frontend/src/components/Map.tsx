@@ -102,7 +102,7 @@ export default function Map({ selectedBar, onClose, onSelectBar, visibleBars }: 
 
     map.flyTo({
       center: selectedBar.coordinates,
-      zoom: 15.5,
+      zoom: 17,
       pitch: 55,
       bearing: -17.6,
       duration: 2000,
