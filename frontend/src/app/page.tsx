@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import { bars } from "@/data/bars";
@@ -9,7 +10,6 @@ import { motion } from "framer-motion";
 import {
   BentoGrid,
   BentoCard,
-  MiniChart,
   EventTicker,
 } from "@/components/landing/BentoGrid";
 
@@ -33,6 +33,61 @@ export default function LandingPage() {
   const featuredBars = bars.slice(0, 6);
   const trendyBars = bars.filter(bar => bar.tags.includes("Trendy")).slice(0, 6);
   const topRatedBars = bars.filter(bar => bar.tags.includes("Top rated")).slice(0, 6);
+  const watchPartyTags = useMemo(() => ["NFL", "UCL", "March Madness", "UFC", "NBA"], []);
+  const [visibleTagCount, setVisibleTagCount] = useState(2);
+  const tagContainerRef = useRef<HTMLDivElement | null>(null);
+  const tagMeasureRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (!tagContainerRef.current || !tagMeasureRef.current) return;
+
+    const measure = () => {
+      const container = tagContainerRef.current;
+      const measureRoot = tagMeasureRef.current;
+      if (!container || !measureRoot) return;
+
+      const gapValue = getComputedStyle(container).gap || getComputedStyle(container).columnGap || "0";
+      const gap = parseFloat(gapValue) || 0;
+
+      const chips = Array.from(measureRoot.querySelectorAll<HTMLElement>("[data-chip='tag']"));
+      const moreChip = measureRoot.querySelector<HTMLElement>("[data-chip='more']");
+      const widths = chips.map((chip) => chip.offsetWidth);
+      const moreWidth = moreChip ? moreChip.offsetWidth : 0;
+      const totalWidth = widths.reduce((acc, width) => acc + width, 0) + gap * Math.max(0, widths.length - 1);
+      const maxVisible = widths.length;
+
+      if (totalWidth <= container.clientWidth) {
+        setVisibleTagCount(maxVisible);
+        return;
+      }
+
+      let visible = maxVisible;
+      while (visible > 1) {
+        const visibleWidth = widths.slice(0, visible).reduce((acc, width) => acc + width, 0);
+        const visibleGaps = gap * Math.max(0, visible - 1);
+        const withMore = visibleWidth + visibleGaps + gap + moreWidth;
+        if (withMore <= container.clientWidth) {
+          break;
+        }
+        visible -= 1;
+      }
+
+      setVisibleTagCount(Math.max(1, visible));
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(tagContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const { visibleWatchTags, remainingWatchTags } = useMemo(() => {
+    const visible = watchPartyTags.slice(0, visibleTagCount);
+    return {
+      visibleWatchTags: visible,
+      remainingWatchTags: Math.max(0, watchPartyTags.length - visible.length),
+    };
+  }, [watchPartyTags, visibleTagCount]);
 
   const handleBarClick = (barName: string) => {
     router.push(`/bars?bar=${encodeURIComponent(barName)}`);
@@ -42,16 +97,15 @@ export default function LandingPage() {
     <>
       <Navbar />
       <main className="relative min-h-screen">
-        {/* ─── Hero Section ─── */}
         <section
-          className="relative min-h-[100vh] flex items-center justify-center overflow-hidden"
+          className="relative min-h-screen flex items-center justify-center overflow-hidden"
           style={{
             backgroundImage: "url(/light-texture.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-kalshi-bg" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/50 to-kalshi-bg" />
 
           <motion.div
             className="relative z-10 text-center px-4 -mt-20 max-w-4xl mx-auto"
@@ -61,16 +115,15 @@ export default function LandingPage() {
           >
             <motion.h1
               variants={heroChild}
-              className="text-5xl md:text-7xl font-semibold text-white mb-6 tracking-tight"
+              className="text-5xl md:text-8xl font-semibold text-white mb-6 tracking-tight"
             >
-              
-              <span className="text-kalshi-green">Kalshi{" "}</span>
-              Bars
+              <span className="text-kalshi-green">Kalshi </span>
+              <span className="italic">Bars</span>
             </motion.h1>
 
             <motion.p
               variants={heroChild}
-              className="text-lg md:text-2xl text-white mb-10 max-w-2xl mx-auto"
+              className="text-md md:text-2xl text-white mb-10 max-w-2xl mx-auto"
             >
               Find bars affiliated with Kalshi
             </motion.p>
@@ -82,8 +135,7 @@ export default function LandingPage() {
 
                   whileTap={{ scale: 0.97 }}
                 >
-                  {/* Inner glass highlight */}
-                  <span className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-b from-white/15 via-transparent to-white/5" />
+                  <span className="pointer-events-none absolute inset-0 rounded-xl bg-linear-to-b from-white/15 via-transparent to-white/5" />
                   <span className="relative">Find a bar near you</span>
                 </motion.span>
               </Link>
@@ -91,7 +143,6 @@ export default function LandingPage() {
           </motion.div>
         </section>
 
-        {/* ─── Bento Features Grid ─── */}
         <section className="bg-kalshi-bg px-4 py-20">
           <div className="max-w-6xl mx-auto">
             <motion.h2
@@ -105,7 +156,6 @@ export default function LandingPage() {
             </motion.h2>
 
             <BentoGrid>
-              {/* Live Markets — 2 cols, tall */}
               <BentoCard
                 title="Live Markets"
                 description="Watch prediction markets move in real-time as the game unfolds."
@@ -129,7 +179,6 @@ export default function LandingPage() {
               />
 
 
-              {/* Find Bars — 1 col */}
               <BentoCard
                 title="Find Bars"
                 description="25+ bars across the East Coast in NYC, Boston, Philly, DC & more."
@@ -156,7 +205,6 @@ export default function LandingPage() {
                 }
               />
 
-              {/* Watch Parties — 1 col */}
               <BentoCard
                 title="Watch Parties"
                 description="NFL, Champions League, March Madness & more. Every big event covered."
@@ -177,19 +225,43 @@ export default function LandingPage() {
                   </svg>
                 }
               >
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {["NFL", "UCL", "March Madness", "UFC", "NBA"].map((tag) => (
+                <div ref={tagContainerRef} className="mt-2 flex items-center gap-1.5 overflow-hidden">
+                  {visibleWatchTags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs text-kalshi-text-secondary"
+                      className="whitespace-nowrap rounded-full bg-white/10 px-2.5 py-0.5 text-xs text-kalshi-text-secondary"
                     >
                       {tag}
                     </span>
                   ))}
+                  {remainingWatchTags > 0 && (
+                    <span className="whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-kalshi-text-secondary">
+                      +{remainingWatchTags}
+                    </span>
+                  )}
+                </div>
+                <div
+                  ref={tagMeasureRef}
+                  className="pointer-events-none absolute -z-10 h-0 overflow-hidden opacity-0"
+                >
+                  {watchPartyTags.map((tag) => (
+                    <span
+                      key={`measure-${tag}`}
+                      data-chip="tag"
+                      className="whitespace-nowrap rounded-full bg-white/10 px-2.5 py-0.5 text-xs text-kalshi-text-secondary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  <span
+                    data-chip="more"
+                    className="whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-kalshi-text-secondary"
+                  >
+                    +99
+                  </span>
                 </div>
               </BentoCard>
 
-              {/* Bet & Watch — spans 1 col wide on lg */}
               <BentoCard
                 title="Trade & Watch"
                 description="Trade while watching the game. Get the full experience in one place."
@@ -211,7 +283,6 @@ export default function LandingPage() {
                 }
               />
 
-              {/* Live Events — 2 cols */}
               <BentoCard
                 title="Live Events"
                 description="There's always something on. Browse upcoming events across all venues."
@@ -239,7 +310,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ─── Featured Bars ─── */}
         <section className="bg-kalshi-bg px-4 py-16">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
@@ -273,7 +343,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ─── Trending ─── */}
         <section className="bg-kalshi-bg px-4 py-16">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
@@ -307,7 +376,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ─── Top Rated ─── */}
         <section className="bg-kalshi-bg px-4 py-16">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">

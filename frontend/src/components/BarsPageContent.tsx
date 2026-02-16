@@ -1,41 +1,36 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Map from "@/components/Map";
 import { bars, type Bar } from "@/data/bars";
 
 export default function BarsPageContent() {
-  const [selectedBar, setSelectedBar] = useState<Bar | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const hasInitialized = useRef(false);
+  const barParam = searchParams.get("bar");
+  const defaultBar = useMemo(() => {
+    return bars.find((b) => b.name === "Brickyard Craft kitchen & Bar") ?? bars[0];
+  }, []);
+
+  const [selectedBar, setSelectedBar] = useState<Bar | null>(() => {
+    if (barParam) {
+      const bar = bars.find((b) => b.name === decodeURIComponent(barParam));
+      if (bar) return bar;
+    }
+    return defaultBar;
+  });
 
   useEffect(() => {
-    const barParam = searchParams.get("bar");
-
-    // If there's a URL param, always process it (search navigation)
-    if (barParam) {
-      const bar = bars.find(b => b.name === decodeURIComponent(barParam));
-      if (bar) {
-        setSelectedBar(bar);
-        // Clean up URL after a short delay to prevent race condition
-        setTimeout(() => {
-          router.replace("/bars", { scroll: false });
-        }, 100);
-      }
-      return;
-    }
-
-    // Only run default initialization logic once on mount
-    if (hasInitialized.current) return;
-
-    // No URL param, default to Brickyard
-    const brickyard = bars.find((b) => b.name === "Brickyard Craft kitchen & Bar");
-    setSelectedBar(brickyard ?? bars[0]);
-    hasInitialized.current = true;
-  }, [searchParams, router]);
+    if (!barParam) return;
+    const bar = bars.find((b) => b.name === decodeURIComponent(barParam));
+    if (!bar) return;
+    const timeout = setTimeout(() => {
+      router.replace("/bars", { scroll: false });
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, [barParam, router]);
 
   const handleBarClick = (bar: Bar) => {
     setSelectedBar(bar);

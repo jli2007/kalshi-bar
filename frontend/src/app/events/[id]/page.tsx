@@ -25,7 +25,6 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
     <>
       <Navbar />
       <main className="mx-auto max-w-7xl px-4 py-8">
-        {/* Back link */}
         <Link
           href="/events"
           className="inline-flex items-center gap-2 text-kalshi-text-secondary hover:text-white mb-6 transition-colors"
@@ -34,7 +33,6 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           Back to Events
         </Link>
 
-        {/* Event header */}
         <div className="relative rounded-xl bg-kalshi-card overflow-hidden mb-8">
           <ShineBorder shineColor="#28CC95" borderWidth={1} duration={10} className="z-10 opacity-70" />
 
@@ -46,7 +44,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
               sizes="100vw"
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-kalshi-card via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-kalshi-card via-transparent to-transparent" />
             <span className="absolute top-4 left-4 rounded-sm border border-kalshi-green/70 bg-kalshi-card/80 backdrop-blur-sm px-2.5 py-1 text-sm font-medium text-kalshi-green">
               {event.category}
             </span>
@@ -63,10 +61,8 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           </div>
         </div>
 
-        {/* Kalshi Markets section */}
         <MarketsSection eventId={id} eventName={event.name} category={event.category} />
 
-        {/* Bars section */}
         <h2 className="text-xl font-bold text-white mb-4">
           {bars.length} Bar{bars.length !== 1 ? "s" : ""} Showing This Event
         </h2>
@@ -88,10 +84,10 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                     sizes="(max-width: 768px) 100vw, 512px"
                     className="object-cover"
                   />
-                  <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-kalshi-card to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-kalshi-card to-transparent" />
                 </div>
               ) : (
-                <div className="w-full h-32 bg-gradient-to-br from-kalshi-green/20 to-kalshi-green/5 flex items-center justify-center">
+                <div className="w-full h-32 bg-linear-to-br from-kalshi-green/20 to-kalshi-green/5 flex items-center justify-center">
                   <span className="text-4xl text-kalshi-green/50 font-bold">{bar.name[0]}</span>
                 </div>
               )}

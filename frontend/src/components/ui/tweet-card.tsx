@@ -290,7 +290,6 @@ export const MockTweetCard = ({
       )}
     >
       <ShineBorder shineColor="#28CC95" borderWidth={1} duration={18} className="opacity-60" />
-      {/* Header */}
       <div className="flex flex-row items-start justify-between tracking-normal">
         <div className="flex items-center space-x-3">
           <Image
@@ -318,12 +317,10 @@ export const MockTweetCard = ({
         </div>
       </div>
 
-      {/* Tweet content */}
       <p className="text-[15px] leading-relaxed tracking-normal text-white flex-1">
         {tweet.text}
       </p>
 
-      {/* Optional image */}
       <div className="mt-auto">
         {tweet.image ? (
           <div className="relative h-44 w-full overflow-hidden rounded-xl border border-kalshi-border">

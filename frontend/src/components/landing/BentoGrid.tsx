@@ -11,7 +11,7 @@ const cardVariants = {
 export function BentoGrid({ children }: { children: ReactNode }) {
   return (
     <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(180px,auto)] gap-4"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(230px,auto)] gap-5"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-60px" }}
@@ -42,42 +42,44 @@ export function BentoCard({
       variants={cardVariants}
       transition={{ duration: 0.5, ease: "easeOut" }}
       whileHover={{ scale: 1.02 }}
-      className={`relative overflow-hidden rounded-2xl border border-white/[0.08] bg-kalshi-card/80 backdrop-blur-sm p-6 flex flex-col justify-between ${className}`}
+      className={`group relative isolate flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/10 bg-kalshi-card/75 p-6 shadow-[0_18px_55px_rgba(0,0,0,0.55)] transition-shadow duration-300 hover:shadow-[0_26px_70px_rgba(0,0,0,0.7)] ${className}`}
     >
-      {/* Background Image */}
       {backgroundImage && (
         <>
           <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-[1.03]"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           />
-          {/* Dark overlay for readability */}
-          <div className="absolute inset-0 bg-black/60" />
-          {/* Gradient overlay for smooth text integration — darker at bottom where text sits */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
+          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/45 to-black/85" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_60%)] opacity-60" />
         </>
       )}
 
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+      <div className="pointer-events-none absolute -inset-24 bg-[radial-gradient(circle_at_top_left,rgba(40,204,149,0.18),transparent_55%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-linear-to-br from-white/4 via-transparent to-transparent pointer-events-none" />
 
-      {/* Spacer to push text to bottom */}
-      <div className="flex-1" />
-
-      <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-1">
-          <h3 className="text-lg font-semibold text-white">{title}</h3>
-          {icon && <div className="text-kalshi-green flex-shrink-0">{icon}</div>}
+      <div className="relative z-10 mt-auto">
+        <div className="rounded-xl border border-white/10 p-4 backdrop-blur-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-lg font-semibold text-white drop-shadow-[0_4px_14px_rgba(0,0,0,0.65)]">
+              {title}
+            </h3>
+            {icon && (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/10 text-kalshi-green/90">
+                {icon}
+              </div>
+            )}
+          </div>
+          <p className="text-sm text-white/75 leading-relaxed">{description}</p>
         </div>
-        <p className="text-sm text-kalshi-text-secondary">{description}</p>
-      </div>
 
-      {children && <div className="relative z-10 mt-4">{children}</div>}
+        {children && <div className="mt-4">{children}</div>}
+      </div>
     </motion.div>
   );
 }
 
-/* Mini animated chart SVG for the Live Markets card */
 export function MiniChart() {
   return (
     <svg
@@ -86,7 +88,6 @@ export function MiniChart() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Grid lines */}
       {[20, 40, 60].map((y) => (
         <line
           key={y}
@@ -99,7 +100,6 @@ export function MiniChart() {
         />
       ))}
 
-      {/* Animated chart line */}
       <motion.path
         d="M0 60 Q25 55 40 45 T80 35 T120 40 T160 25 T200 30"
         stroke="#28CC95"
@@ -111,7 +111,6 @@ export function MiniChart() {
         transition={{ duration: 1.5, ease: "easeInOut", delay: 0.3 }}
       />
 
-      {/* Glow under the line */}
       <motion.path
         d="M0 60 Q25 55 40 45 T80 35 T120 40 T160 25 T200 30 V80 H0 Z"
         fill="url(#chartGlow)"
@@ -121,7 +120,6 @@ export function MiniChart() {
         transition={{ duration: 1.5, delay: 0.5 }}
       />
 
-      {/* Pulsing dot at end */}
       <motion.circle
         cx="200"
         cy="30"
@@ -153,7 +151,6 @@ export function MiniChart() {
   );
 }
 
-/* Scrolling event ticker for the Live Events card */
 export function EventTicker() {
   const events = [
     "NFL Sunday Ticket",

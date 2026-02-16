@@ -89,7 +89,6 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   return (
     <nav className="sticky top-0 z-50 border-b border-kalshi-border bg-kalshi-bg/80 backdrop-blur-md">
       <div className="flex h-14 items-center justify-between px-4">
-        {/* Left: Logo + Nav Links */}
         <div className="flex items-center gap-8">
           <Link href="/" className="text-base font-bold tracking-tight text-kalshi-green md:text-xl">
             Kalshi
@@ -113,7 +112,6 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
           </div>
         </div>
 
-        {/* Center: Search (absolutely centered on screen) */}
         <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
           <div className="relative w-96">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
@@ -159,7 +157,6 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
           </div>
         </div>
 
-        {/* Right: Auth Buttons + Hamburger */}
         <div className="flex items-center gap-3">
           <button className="hidden text-sm font-medium text-kalshi-text-secondary transition-colors hover:text-white sm:block">
             Log in
@@ -181,11 +178,9 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="border-t border-kalshi-border bg-kalshi-bg/95 backdrop-blur-md md:hidden">
           <div className="px-4 py-3">
-            {/* Mobile Search */}
             <div className="relative mb-3">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
               <input
@@ -231,7 +226,6 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
               )}
             </div>
 
-            {/* Mobile Nav Links */}
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
@@ -251,7 +245,6 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
               ))}
             </div>
 
-            {/* Mobile Auth Buttons */}
             <div className="mt-3 flex gap-2 border-t border-kalshi-border pt-3 sm:hidden">
               <button className="flex-1 rounded-lg border border-kalshi-border py-2 text-sm font-medium text-kalshi-text-secondary transition-colors hover:text-white">
                 Log in

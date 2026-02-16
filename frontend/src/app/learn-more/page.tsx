@@ -220,7 +220,6 @@ export default function LearnMorePage() {
           See what bars and customers are saying
         </p>
 
-        {/* Bar Scan Section */}
         <section className="mt-10">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
@@ -273,13 +272,13 @@ export default function LearnMorePage() {
                           {tag}
                         </span>
                       ))}
-                      <span className="rounded-full border border-[#28CC95]/40 bg-[#28CC95]/10 px-3 py-1 text-xs font-medium text-[#28CC95]">
+                      <span className="rounded-full border border-kalshi-green/40 bg-kalshi-green/10 px-3 py-1 text-xs font-medium text-kalshi-green">
                         {bar.events[0]}
                       </span>
                     </div>
                   </div>
                   <div className="flex justify-center">
-                    <div className="w-full max-w-[15rem] rounded-[28px] bg-gradient-to-br from-white via-[#E6FFF4] to-white p-5 text-center shadow-[0_15px_45px_rgba(0,8,5,0.25)]">
+                    <div className="w-full max-w-60 rounded-[28px] bg-linear-to-br from-white via-[#E6FFF4] to-white p-5 text-center shadow-[0_15px_45px_rgba(0,8,5,0.25)]">
                       <div className="mx-auto w-fit rounded-2xl border border-black/5 bg-white p-3 shadow-inner">
                         <QRCodeSVG
                           value={bar.website}
@@ -294,12 +293,12 @@ export default function LearnMorePage() {
                       <p className="mt-1 text-xs font-medium text-[#003221]">
                         {formatWebsite(bar.website)}
                       </p>
-                      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-transparent via-[#003221]/40 to-transparent" />
+                      <div className="mx-auto mt-4 h-px w-16 bg-linear-to-r from-transparent via-[#003221]/40 to-transparent" />
                       <a
                         href={bar.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-4 inline-flex items-center justify-center rounded-full border border-[#28CC95]/40 bg-[#28CC95] px-4 py-1.5 text-xs font-semibold text-[#003221] transition hover:brightness-110"
+                        className="mt-4 inline-flex items-center justify-center rounded-full border border-kalshi-green/40 bg-kalshi-green px-4 py-1.5 text-xs font-semibold text-[#003221] transition hover:brightness-110"
                       >
                         Open website
                       </a>
@@ -311,7 +310,6 @@ export default function LearnMorePage() {
           </div>
         </section>
 
-        {/* Bar Tweets Section */}
         <section className="mt-12">
           <h2 className="text-xl font-semibold text-white mb-4">Recent Bar News</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
@@ -321,7 +319,6 @@ export default function LearnMorePage() {
           </div>
         </section>
 
-        {/* Customer Reviews Section */}
         <section className="mt-12">
           <h2 className="text-xl font-semibold text-white mb-4">What Customers Have Been Saying</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
