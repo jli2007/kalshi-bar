@@ -198,7 +198,7 @@ export default function EventMarketCard({
         <div className="flex items-start justify-between gap-4 mb-6">
           <h3 className="text-xl font-semibold text-white">{eventTitle}</h3>
         </div>
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           <div className="flex-1">
             <div className="flex items-center text-xs text-kalshi-text-secondary mb-3">
               <span className="flex-1">Market</span>
@@ -264,7 +264,7 @@ export default function EventMarketCard({
             </p>
           </div>
 
-          <div className="w-80">
+          <div className="w-full md:w-80">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-4 flex-wrap">
                 {outcomes.slice(0, 3).map((outcome) => {

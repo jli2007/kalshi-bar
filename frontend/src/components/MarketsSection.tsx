@@ -97,7 +97,7 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
               <div className="h-10 bg-white/10 rounded" />
               <div className="h-10 bg-white/10 rounded" />
             </div>
-            <div className="w-80 h-40 bg-white/5 rounded" />
+            <div className="w-full md:w-80 h-40 bg-white/5 rounded" />
           </div>
         </div>
       </div>

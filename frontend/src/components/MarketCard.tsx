@@ -78,7 +78,7 @@ export default function MarketCard({ market }: MarketCardProps) {
           {market.title}
         </h3>
 
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
           <div className="flex-1">
             <div className="flex items-center gap-8 text-xs text-kalshi-text-secondary mb-3">
               <span className="w-24">Market</span>
@@ -121,7 +121,7 @@ export default function MarketCard({ market }: MarketCardProps) {
             </p>
           </div>
 
-          <div className="w-64 flex flex-col">
+          <div className="w-full md:w-64 flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-4 text-xs">
                 <span className="flex items-center gap-1">
