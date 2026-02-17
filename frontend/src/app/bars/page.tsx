@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import BarsPageContent from "@/components/BarsPageContent";
 
-// Simple loading fallback
 function BarsPageLoading() {
   return (
     <div className="min-h-screen bg-kalshi-bg flex items-center justify-center">

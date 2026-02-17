@@ -12,6 +12,7 @@ import {
   BentoCard,
   EventTicker,
 } from "@/components/landing/BentoGrid";
+import HalftoneWaveBackground from "@/components/HalftoneWaveBackground";
 
 const heroStagger = {
   hidden: {},
@@ -97,33 +98,33 @@ export default function LandingPage() {
     <>
       <Navbar />
       <main className="relative min-h-screen">
-        <section
-          className="relative min-h-screen flex items-center justify-center overflow-hidden"
-          style={{
-            backgroundImage: "url(/light-texture.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/50 to-kalshi-bg" />
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+          <HalftoneWaveBackground />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,12,10,0.85)_0%,rgba(7,12,10,0.2)_35%,rgba(7,12,10,0.9)_100%)]" />
 
           <motion.div
-            className="relative z-10 text-center px-4 -mt-20 max-w-4xl mx-auto"
+            className="relative z-10 mx-auto max-w-4xl px-6 text-center sm:px-4 md:-mt-20"
             variants={heroStagger}
             initial="hidden"
             animate="visible"
           >
             <motion.h1
               variants={heroChild}
-              className="text-5xl md:text-8xl font-semibold text-white mb-6 tracking-tight"
+              className="text-5xl font-semibold text-white mb-6 tracking-tight sm:text-6xl md:text-8xl"
+              style={{
+                textShadow: "0 0 40px rgba(40, 204, 149, 0.5), 0 0 80px rgba(40, 204, 149, 0.3), 0 4px 20px rgba(0, 0, 0, 0.5)"
+              }}
             >
-              <span className="text-kalshi-green">Kalshi </span>
-              <span className="italic">Bars</span>
+              <span className="text-kalshi-green drop-shadow-[0_0_10px_rgba(40,204,149,0.25)]">Kalshi </span>
+              <span className="italic drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">Bars</span>
             </motion.h1>
 
             <motion.p
               variants={heroChild}
-              className="text-md md:text-2xl text-white mb-10 max-w-2xl mx-auto"
+              className="mx-auto mb-10 max-w-2xl text-base text-white sm:text-lg md:text-2xl"
+              style={{
+                textShadow: "0 2px 10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(40, 204, 149, 0.2)"
+              }}
             >
               Find bars affiliated with Kalshi
             </motion.p>
@@ -152,7 +153,7 @@ export default function LandingPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              How it works
+              Kalshi&apos;s Bar Platform
             </motion.h2>
 
             <BentoGrid>
@@ -320,7 +321,7 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                Featured bars
+                Featured Bars
               </motion.h2>
             </div>
 
@@ -386,7 +387,7 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                Top rated
+                Top Rated
               </motion.h2>
             </div>
 

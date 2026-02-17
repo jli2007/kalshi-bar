@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useMemo, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MagnifyingGlassIcon, Cross2Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
@@ -25,34 +25,31 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const blurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const results =
-    query.trim().length > 0
-      ? bars
-          .filter((bar) => {
-            const q = query.trim().toLowerCase();
-            return (
-              bar.name.toLowerCase().includes(q) ||
-              bar.location.toLowerCase().includes(q)
-            );
-          })
-          .slice(0, 5)
-      : [];
+  const searchIndex = useMemo(() => {
+    return bars.map((bar) => ({
+      bar,
+      name: bar.name.toLowerCase(),
+      location: bar.location.toLowerCase(),
+    }));
+  }, []);
 
-  useEffect(() => {
-    setOpen(results.length > 0);
-    setHighlightIndex(-1);
-  }, [results.length, query]);
+  const results = useMemo(() => {
+    const trimmed = query.trim();
+    if (trimmed.length === 0) return [];
+    const q = trimmed.toLowerCase();
+    return searchIndex
+      .filter((item) => item.name.includes(q) || item.location.includes(q))
+      .slice(0, 5)
+      .map((item) => item.bar);
+  }, [query, searchIndex]);
+  const isOpen = open && results.length > 0;
 
   const handleSelect = (bar: Bar) => {
-    // If we have an onSelectBar callback (we're on the /bars page), use it
     if (onSelectBar) {
       onSelectBar(bar);
     } else {
-      // Otherwise navigate to bars page with selected bar
       router.push(`/bars?bar=${encodeURIComponent(bar.name)}`);
     }
-
-    // Clear search state
     setQuery("");
     setOpen(false);
     setHighlightIndex(-1);
@@ -117,14 +114,19 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
           </div>
         </div>
 
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
-          <div className="relative w-96">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+          <div className="relative w-[clamp(16rem,32vw,24rem)]">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-kalshi-text-secondary" />
             <input
               type="text"
               placeholder="Search for bars..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value;
+                setQuery(next);
+                setOpen(next.trim().length > 0);
+                setHighlightIndex(-1);
+              }}
               onFocus={handleFocus}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
@@ -142,7 +144,7 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
               </button>
             )}
 
-            {open && results.length > 0 && (
+            {isOpen && (
               <div className="absolute left-0 top-full mt-1 w-full overflow-hidden rounded-lg border border-kalshi-border bg-kalshi-card shadow-lg">
                 {results.map((bar, i) => (
                   <button
@@ -209,7 +211,7 @@ export default function Navbar({ onSelectBar }: NavbarProps) {
                   <Cross2Icon className="h-3.5 w-3.5" />
                 </button>
               )}
-              {open && results.length > 0 && (
+              {isOpen && (
                 <div className="absolute left-0 top-full mt-1 w-full overflow-hidden rounded-lg border border-kalshi-border bg-kalshi-card shadow-lg">
                   {results.map((bar, i) => (
                     <button

@@ -78,8 +78,7 @@ export default function MarketsSection({ eventId, eventName, category }: Markets
     }
 
     fetchMarkets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventId]);
+  }, [eventId, eventName, category]);
 
   if (loading) {
     return (

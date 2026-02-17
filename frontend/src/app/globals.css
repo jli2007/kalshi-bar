@@ -29,7 +29,6 @@ body {
   font-weight: 500;
 }
 
-/* Allow vertical scrolling past the map on touch devices */
 .mapboxgl-canvas {
   touch-action: pan-y pinch-zoom;
 }

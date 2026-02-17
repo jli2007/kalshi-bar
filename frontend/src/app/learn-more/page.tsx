@@ -5,7 +5,6 @@ import { ReviewCard, type MockReview } from "@/components/ui/review-card";
 import { bars, type Bar } from "@/data/bars";
 import { QRCodeSVG } from "qrcode.react";
 
-// Scan lineup helpers
 const barsWithImages = bars.filter((bar) => bar.image);
 
 const barScanCopy = [
@@ -26,7 +25,6 @@ const barScanCards = barsWithImages.slice(0, 8).map((bar, index) => ({
 
 const formatWebsite = (url: string) => url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-// Bar tweet helpers
 const formatHandle = (name: string) =>
   name
     .toLowerCase()
@@ -237,7 +235,7 @@ export default function LearnMorePage() {
             {barScanCards.map(({ bar, message }) => (
               <article
                 key={bar.name}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[url('/dark-texture.jpg')] bg-cover bg-center p-6 shadow-[0_25px_60px_rgba(0,0,0,0.65)]"
+                className="group relative overflow-hidden rounded-3xl bg-[url('/dark-texture.jpg')] bg-cover bg-center p-6 shadow-[0_25px_60px_rgba(0,0,0,0.65)]"
               >
                 <div className="grid gap-8 md:grid-cols-[1.3fr_auto] md:items-center">
                   <div className="flex flex-col gap-4">
